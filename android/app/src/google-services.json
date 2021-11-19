@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "888694979079",
+    "project_id": "pantao-farma",
+    "storage_bucket": "pantao-farma.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888694979079:android:75adad1a095a7a096b08a2",
+        "android_client_info": {
+          "package_name": "com.example.plantao_farma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888694979079-7ou36qj7tbqotd208toi14qr4c998kqi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.plantao_farma",
+            "certificate_hash": "178a20db7fd039b217d8e3431da90802e5141108"
+          }
+        },
+        {
+          "client_id": "888694979079-ldvek9bnklpp99jjbo5590u45m26khi0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDY5PrG9OR-J9EEmbplC-qPKK99dThCZas"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888694979079-ldvek9bnklpp99jjbo5590u45m26khi0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
