@@ -5,5 +5,7 @@ class AppAssets{
   static const titleG = 'assets/images/imgTitleG.png';
   static const buttonON = 'assets/images/imgButtonON.png';
   static const buttonOFF = 'assets/images/imgButtonOFF.png';
+  static const buttonReset = 'assets/images/iconReset.png';
+  static const iconEnviar = 'assets/images/imgIconEnviar.png';
   
 }

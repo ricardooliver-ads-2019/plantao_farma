@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/app_routes.dart';
+import 'package:plantao_farma/components/form_cadast_farmacia.dart';
 import 'package:plantao_farma/utils/app_color.dart';
 class PageCadastFarma extends StatefulWidget {
   const PageCadastFarma({ Key? key }) : super(key: key);
@@ -33,7 +34,10 @@ class _PageCadastFarmaState extends State<PageCadastFarma> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          children: [],
+          // ignore: prefer_const_literals_to_create_immutables
+          children: [
+            FormCadastFarmacia(),
+          ],
         ),
         
       ),
