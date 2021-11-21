@@ -1,9 +1,12 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors, avoid_unnecessary_containers, unused_local_variable
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, avoid_unnecessary_containers, unused_local_variable, implementation_imports
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/components/default_button.dart';
+import 'package:plantao_farma/provides/services/auth_service.dart';
+import 'package:plantao_farma/provides/services/firestore_service.dart';
 import 'package:plantao_farma/provides/services/time_service.dart';
+import 'package:plantao_farma/screens/login_screen.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
 import 'package:plantao_farma/utils/app_color.dart';
 import 'package:provider/src/provider.dart';
@@ -29,8 +32,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
   TimeOfDay? _hFechamento = TimeOfDay(hour: 22, minute: 0);
   String horaAber = "";
   String horaFech = "";
-  //var _horarioFechamentoEC;
-  var _plantaoEC = TextEditingController();
+  bool? _platao;
 
   @override
   void dispose() {
@@ -41,20 +43,22 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     _whatsaapEC.dispose();   
     _cepEC.dispose();
     _ederecoEC.dispose();
-    _plantaoEC.dispose();
     super.dispose();
   }
 
   void clearTextEditingController(){
+    //limpar formulario
     setState(() {
-      _nameEC = TextEditingController();
-      _emailEC = TextEditingController();
-      _cnpjEC = TextEditingController();
-      _telefoneEC = TextEditingController();
-      _whatsaapEC = TextEditingController();
-      _cepEC = TextEditingController();
-      _ederecoEC = TextEditingController();
-      _plantaoEC = TextEditingController();
+      _nameEC.clear();
+      _emailEC.clear();
+      _cnpjEC.clear();
+      _telefoneEC.clear();
+      _whatsaapEC.clear();
+      _cepEC.clear();
+      _ederecoEC.clear();
+      _platao = false;
+      _hAbertura = TimeOfDay(hour: 8, minute: 0);
+      _hFechamento = TimeOfDay(hour: 22, minute: 0);
     });
   }
 
@@ -96,8 +100,20 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     
   }
 
+  cadastrar()async{
+    try{
+      await context.read<FirestoreService>().cadastrar(
+        _nameEC.text, _emailEC.text, _cnpjEC.text, _telefoneEC.text, _whatsaapEC.text, _cepEC.text, _ederecoEC.text, _hAbertura.toString(), _hFechamento.toString(), _platao!
+      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Center(child: Icon(Icons.check, size: 50, color: Colors.green))));
+    } on FirestoreExceptions catch (e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    AuthService auth = Provider.of<AuthService>(context);
     var telaWidth = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -115,11 +131,11 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   labelText: "Nome",
-                  hintText: "Nome",
+                  hintText: "Informe o nome da farmácia",
                   hintStyle: TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey)
                 ),
-                validator: Validatorless.required('Informe seu nome!'),
+                validator: Validatorless.required('Campo obrigatório!'),
               ),
             ),
             Container(
@@ -138,7 +154,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                 ),
                 validator: Validatorless.multiple([
                   Validatorless.email('Email Inválido!'),
-                  Validatorless.required('Informe seu email!'),
+                  Validatorless.required('Campo obrigatório!'),
                 ]),
                 
               ),
@@ -152,11 +168,14 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   labelText: "CNPJ",
-                  hintText: "Informe o Asunto",
+                  hintText: "Informe o CNPJ",
                   hintStyle: TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey)
                 ),
-                validator: Validatorless.required("Informe O assunto da mensagem!"),
+                validator: Validatorless.multiple([
+                  Validatorless.required('Campo obrigatório!'),
+                  Validatorless.cnpj('CNPJ Invalido!')
+                ])
               ),
             ),
             Container(
@@ -169,11 +188,11 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   labelText: "Telefone",
-                  hintText: "Informe o Asunto",
+                  hintText: "Informe um telefone para cadastro",
                   hintStyle: TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey)
                 ),
-                validator: Validatorless.required("Informe O assunto da mensagem!"),
+                validator: Validatorless.required("Campo obrigatório!"),
               ),
             ),
             Container(
@@ -185,12 +204,12 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  labelText: "Whatsaap",
-                  hintText: "Informe o Asunto",
+                  labelText: "Whatsapp",
+                  hintText: "Informe o número de whatsapp",
                   hintStyle: TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey)
                 ),
-                validator: Validatorless.required("Informe O assunto da mensagem!"),
+                validator: Validatorless.required('Campo obrigatório!'),
               ),
             ),
             Container(
@@ -202,11 +221,11 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   labelText: "CEP",
-                  hintText: "Informe o Asunto",
+                  hintText: "Informe o CEP do estabelecimento",
                   hintStyle: TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey)
                 ),
-                validator: Validatorless.required("Informe O assunto da mensagem!"),
+                validator: Validatorless.required('Campo obrigatório!'),
               ),
             ),
             Container(
@@ -218,11 +237,11 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   labelText: "Endereço",
-                  hintText: "Informe o Asunto",
+                  hintText: "Informe o Endereço do estabelecimento",
                   hintStyle: TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey)
                 ),
-                validator: Validatorless.required("Informe O assunto da mensagem!"),
+                validator: Validatorless.required('Campo obrigatório!'),
               ),
             ),
 
@@ -312,26 +331,38 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                 ],
               ),
             ),
-            
-            Container(
-              child: TextFormField(
-                controller: _plantaoEC,
-                onChanged: (value) {},
-                style: TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  labelText: "Plantão",
-                  hintText: "Informe o Asunto",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  labelStyle: TextStyle(color: Colors.grey)
-                ),
-                validator: Validatorless.required("Informe O assunto da mensagem!"),
-              ),
+
+            SizedBox(
+              height: 10,
             ),
 
-            SizedBox(height: 40),
+            Container(
+              child: SwitchListTile(
+                value: _platao ??= false,
+                onChanged: (newValue) {
+                  //print(platao);
+                  setState(() => _platao = newValue);
+                  //print(platao);
+                } ,
+                title: Text(
+                  'Farmacia de Plantão',
+                  style: GoogleFonts.nunito(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w600
+                  ),
+                ),
+                subtitle: Text(
+                  'Este campo marca a farmácia como Plantonista',
+                  style: null,
+                ),
+                tileColor: Color(0xFFF5F5F5),
+                dense: true,
+                controlAffinity: ListTileControlAffinity.trailing,
+              ),
+            ),
+            
             SizedBox(height: 20),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -353,24 +384,27 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                 children: [
                   FittedBox(
                     child: Container(
-                      height: 24,
-                      width: telaWidth > 350 ? 110 : 200,
+                      height: 50,
+                      width: 200,
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(50)
                       ),
                       child: DefaultButton(
                         imageSrc: AppAssets.iconEnviar,
-                        text: "Enviar!",
+                        text: "Salvar!",
                         press: () {
                           var formValid = _formKey.currentState?.validate() ?? false;
                           if(formValid){
-                            //chamada da função para enviar email
-                            //_nameEC.text, 
-                            //_emailEC.text, 
-                            //_descrisionEC.text, 
-                            //_mesageEC.text
-
+                            if (auth.isLoading) {
+                              return loading();
+                            }else if(auth.usuario == null){
+                              //volta para pagina de login
+                              return LoginScreen();
+                            }else{
+                              //salvando no firebase
+                              return cadastrar();
+                            }
                           }
                         },
                       ),
@@ -381,6 +415,15 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             )
           ],
         ),
+      ),
+    );
+  }
+  loading(){
+    return Scaffold(
+      body: Container(
+        color: AppColor.bgColor,
+        height: MediaQuery.of(context).size.height,
+        child: Center(child: CircularProgressIndicator(color: AppColor.primaryColor,),)
       ),
     );
   }

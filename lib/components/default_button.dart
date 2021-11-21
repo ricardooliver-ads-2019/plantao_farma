@@ -37,14 +37,14 @@ class DefaultButton extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(flex: 2,child: Image.asset(imageSrc, height: 20)),
-          Expanded(flex: 0, child: SizedBox(width: 10)),
+          Expanded(flex: 2,child: Image.asset(imageSrc, height: 30)),
+          //Expanded(flex: 0, child: SizedBox(width: 10)),
           Expanded(
             flex: 3,
             child: Text(text, 
               style: GoogleFonts.oswald(
                 color: AppColor.primaryColor,
-                fontSize: 15,
+                fontSize: 18,
                 fontWeight: FontWeight.normal
               ),
             )

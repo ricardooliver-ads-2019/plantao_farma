@@ -14,6 +14,7 @@ import 'package:plantao_farma/screens/splash_screen.dart';
 import 'package:plantao_farma/utils/auth_check.dart';
 import 'package:provider/provider.dart';
 import 'provides/services/auth_service.dart';
+import 'provides/services/firestore_service.dart';
 
 
 void main() async{
@@ -23,6 +24,7 @@ void main() async{
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => FirestoreService()),
         ChangeNotifierProvider(create: (context) => TimeService()),
       ],
       child: MyApp(),
