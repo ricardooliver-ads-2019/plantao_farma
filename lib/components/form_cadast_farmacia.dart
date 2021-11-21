@@ -1,8 +1,12 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors, avoid_unnecessary_containers
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, avoid_unnecessary_containers, unused_local_variable
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/components/default_button.dart';
+import 'package:plantao_farma/provides/services/time_service.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
+import 'package:plantao_farma/utils/app_color.dart';
+import 'package:provider/src/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
 class FormCadastFarmacia extends StatefulWidget {
@@ -21,8 +25,11 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
   var _whatsaapEC = TextEditingController();
   var _cepEC = TextEditingController();
   var _ederecoEC = TextEditingController();
-  var _horarioAberturaEC = TextEditingController();
-  var _horarioFechamentoEC = TextEditingController();
+  TimeOfDay? _hAbertura = TimeOfDay(hour: 8, minute: 0);
+  TimeOfDay? _hFechamento = TimeOfDay(hour: 22, minute: 0);
+  String horaAber = "";
+  String horaFech = "";
+  //var _horarioFechamentoEC;
   var _plantaoEC = TextEditingController();
 
   @override
@@ -34,8 +41,6 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     _whatsaapEC.dispose();   
     _cepEC.dispose();
     _ederecoEC.dispose();
-    _horarioAberturaEC.dispose();
-    _horarioFechamentoEC.dispose();
     _plantaoEC.dispose();
     super.dispose();
   }
@@ -49,10 +54,46 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
       _whatsaapEC = TextEditingController();
       _cepEC = TextEditingController();
       _ederecoEC = TextEditingController();
-      _horarioAberturaEC = TextEditingController();
-      _horarioFechamentoEC = TextEditingController();
       _plantaoEC = TextEditingController();
     });
+  }
+
+  Future pickTimeAbertura(BuildContext context) async {
+    final initialTime = TimeOfDay(hour: 9, minute: 0);
+    final newTime = await showTimePicker(
+      context: context,
+      initialTime: _hAbertura ?? initialTime,
+    );
+
+    if (newTime == null) return;
+
+    setState(() { _hAbertura = newTime;
+      final hours = _hAbertura!.hour.toString().padLeft(2, '0');
+      final minutes = _hAbertura!.minute.toString().padLeft(2, '0');
+      horaAber = '$hours:$minutes';
+      //print(horaAber);
+      context.read<TimeService>().getHorarioAbertura(newTime);
+    });
+    
+  }
+
+  Future pickTimeFechameto(BuildContext context) async {
+    final initialTime = TimeOfDay(hour: 22, minute: 0);
+    final newTime = await showTimePicker(
+      context: context,
+      initialTime: _hFechamento ?? initialTime,
+    );
+
+    if (newTime == null) return;
+
+    setState(() { _hFechamento = newTime;
+      final hours = _hFechamento!.hour.toString().padLeft(2, '0');
+      final minutes = _hFechamento!.minute.toString().padLeft(2, '0');
+      horaFech = '$hours:$minutes';
+      //print(horaFech);
+      context.read<TimeService>().getHorarioAbertura(newTime);
+    });
+    
   }
 
   @override
@@ -83,6 +124,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             ),
             Container(
               child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 controller: _emailEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -119,6 +161,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             ),
             Container(
               child: TextFormField(
+                keyboardType: TextInputType.phone,
                 controller: _telefoneEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -135,6 +178,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             ),
             Container(
               child: TextFormField(
+                keyboardType: TextInputType.phone,
                 controller: _whatsaapEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -181,38 +225,94 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                 validator: Validatorless.required("Informe O assunto da mensagem!"),
               ),
             ),
+
             Container(
-              child: TextFormField(
-                controller: _horarioAberturaEC,
-                onChanged: (value) {},
-                style: TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  labelText: "Horario Abertura",
-                  hintText: "Informe o Asunto",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  labelStyle: TextStyle(color: Colors.grey)
-                ),
-                validator: Validatorless.required("Informe O assunto da mensagem!"),
+              child: Column(
+
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text('Informe o Horario de Funcionamento',
+                      style: GoogleFonts.oswald(
+                        color: Colors.grey,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        height: 135,
+                        width: 120,
+                        color: Colors.blue,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Abertura",
+                              style: GoogleFonts.nunito(
+                                color: AppColor.bgColor,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text("${_hAbertura!.hour.toString().padLeft(2, '0')} : ${_hAbertura!.minute.toString().padLeft(2, '0')}",
+                              style: GoogleFonts.nunito(
+                                color: AppColor.bgColor,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            GestureDetector(
+                              child: Icon(Icons.access_time_outlined, size: 50),
+                              onTap: ()=> pickTimeAbertura(context),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 135,
+                        width: 120,
+                        color: Colors.amber,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Fechamento",
+                              style: GoogleFonts.nunito(
+                                color: AppColor.bgColor,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w600
+                              ),
+                            ),
+                             SizedBox(
+                              height: 10,
+                            ),
+                            Text("${_hFechamento!.hour.toString().padLeft(2, '0')} : ${_hAbertura!.minute.toString().padLeft(2, '0')}",
+                              style: GoogleFonts.nunito(
+                                color: AppColor.bgColor,
+                                fontSize: 15.0,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            GestureDetector(
+                              child: Icon(Icons.access_time_outlined, size: 50),
+                              onTap: ()=> pickTimeFechameto(context),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                ],
               ),
             ),
-            Container(
-              child: TextFormField(
-                controller: _horarioFechamentoEC,
-                onChanged: (value) {},
-                style: TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  labelText: "Horario Fechamento",
-                  hintText: "Informe o Asunto",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  labelStyle: TextStyle(color: Colors.grey)
-                ),
-                validator: Validatorless.required("Informe O assunto da mensagem!"),
-              ),
-            ),
+            
             Container(
               child: TextFormField(
                 controller: _plantaoEC,
@@ -229,6 +329,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                 validator: Validatorless.required("Informe O assunto da mensagem!"),
               ),
             ),
+
             SizedBox(height: 40),
             SizedBox(height: 20),
             Row(

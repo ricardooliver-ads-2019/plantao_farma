@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:plantao_farma/app_routes.dart';
+import 'package:plantao_farma/provides/services/time_service.dart';
 import 'package:plantao_farma/screens/area_adm_screen.dart';
 import 'package:plantao_farma/screens/area_user_farma_screen.dart';
 import 'package:plantao_farma/screens/home_screen.dart';
@@ -22,6 +23,7 @@ void main() async{
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => TimeService()),
       ],
       child: MyApp(),
     ),
@@ -63,7 +65,7 @@ class _MyAppState extends State<MyApp> {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            initialRoute: AppRoutes.AREA_ADM,
+            initialRoute: AppRoutes.SPLASH,
             routes: {
               AppRoutes.SPLASH: (context) => SplashScreen(),
               AppRoutes.HOME: (context) => HomeScreen(),

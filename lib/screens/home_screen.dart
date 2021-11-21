@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: (){
-                    print(authProvider.usuario);
+                    //print(authProvider.usuario);
                     Navigator.of(context).pushNamed(AppRoutes.LOGIN);
 
                   },

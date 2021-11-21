@@ -27,7 +27,7 @@ class AuthService extends ChangeNotifier{
 
   _getUser(){ // captura o usuario atural
     usuario = _auth.currentUser;
-    print(usuario);
+    //print(usuario);
     notifyListeners();
   }
 
