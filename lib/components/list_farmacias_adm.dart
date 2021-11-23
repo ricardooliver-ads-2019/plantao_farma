@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:plantao_farma/app_routes.dart';
 import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/provides/services/firestore_service.dart';
 import 'package:plantao_farma/screens/page_update_farma.dart';

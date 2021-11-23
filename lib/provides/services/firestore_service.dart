@@ -18,10 +18,12 @@ class FirestoreService extends ChangeNotifier{
 
   FirestoreService(){
     _startFirestore();
+    
   }
 
   _startFirestore()async{
-    await _listFirestore();
+    //await _listFirestore();
+    await _listFirestoreAtual();
   }
 
 
@@ -36,8 +38,8 @@ class FirestoreService extends ChangeNotifier{
         'plantao':farmacia.plantao,
       });
 
-      list.add(farmacia);
-        notifyListeners();
+      //list.add(farmacia);
+      //  notifyListeners();
       
     } on FirebaseFirestore catch (e){
 
@@ -46,6 +48,39 @@ class FirestoreService extends ChangeNotifier{
     }
 
   }
+
+  _listFirestoreAtual() async{
+
+    await dbFirestore.collection(collectionFirestore).snapshots().listen(
+      (event) { 
+        list.clear();
+        for (DocumentSnapshot item in event.docs) {
+          var name = item.get('name');
+          var dados = item.id;
+          Farmacia farma = Farmacia(
+            id: item.id,
+            nome: item.get('name'), 
+            cnpj: item.get('cnpj'), 
+            logo: item.get('logo'), 
+            horarioAbertura: item.get('horarioAbertura'), 
+            horarioFechamento: item.get('horarioFechamento'), 
+            plantao: item.get('plantao')
+          );
+            
+            list.add(farma);
+            notifyListeners();
+          print('Dasdos exibicao: + ${dados} - ${name}');
+        }
+        
+      }
+    );
+    
+  }
+
+
+
+
+
    
   _listFirestore() async{
     var result = await dbFirestore.collection(collectionFirestore).get();
@@ -65,6 +100,9 @@ class FirestoreService extends ChangeNotifier{
     }
   }
 
+
+  
+
   update(Farmacia farmacia)async{
     try{
       await dbFirestore.collection(collectionFirestore).doc(farmacia.id).update({
@@ -75,10 +113,7 @@ class FirestoreService extends ChangeNotifier{
         'horarioFechamento': farmacia.horarioFechamento,
         'plantao':farmacia.plantao,
       });
-
-      list.add(farmacia);
-        notifyListeners();
-      
+     
     } on FirebaseFirestore catch (e){
 
       throw FirestoreExceptions(e.toString());
@@ -88,8 +123,8 @@ class FirestoreService extends ChangeNotifier{
   }
 
   remove(Farmacia farma) async{
-    list.remove(farma);
-    notifyListeners();
+    //list.remove(farma);
+    //notifyListeners();
     dbFirestore.collection(collectionFirestore).doc(farma.id).delete();
 
   }
