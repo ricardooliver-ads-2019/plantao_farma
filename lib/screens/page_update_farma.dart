@@ -1,24 +1,26 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/app_routes.dart';
-import 'package:plantao_farma/components/form_cadast_farmacia.dart';
+import 'package:plantao_farma/components/form_update_farma.dart';
+import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/utils/app_color.dart';
-class PageCadastFarma extends StatefulWidget {
-  const PageCadastFarma({ Key? key }) : super(key: key);
 
+class PageUpdateFarma extends StatefulWidget {
+  const PageUpdateFarma({ Key? key, required this.farmacia }) : super(key: key);
+  final Farmacia farmacia;
   @override
-  _PageCadastFarmaState createState() => _PageCadastFarmaState();
+  _PageUpdateFarmaState createState() => _PageUpdateFarmaState();
 }
 
-class _PageCadastFarmaState extends State<PageCadastFarma> {
+class _PageUpdateFarmaState extends State<PageUpdateFarma> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColor.primaryColor,
-        title: Text('Cadastro de Farmacias', 
+        title: Text('Atualizar de Farmacias', 
           style: GoogleFonts.oswald(
             color: AppColor.bgColor,
             fontSize: 24,
@@ -34,9 +36,8 @@ class _PageCadastFarmaState extends State<PageCadastFarma> {
       ),
       body: SingleChildScrollView(
         child: Column(
-          // ignore: prefer_const_literals_to_create_immutables
           children: [
-            FormCadastFarmacia(),
+            FormUpdateFarma(farmacia: widget.farmacia,),
           ],
         ),
         

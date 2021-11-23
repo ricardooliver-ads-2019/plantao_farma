@@ -3,7 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/app_routes.dart';
+import 'package:plantao_farma/components/farmacia_grid.dart';
+import 'package:plantao_farma/components/list_farmacias_adm.dart';
+import 'package:plantao_farma/models/farmacia.dart';
+import 'package:plantao_farma/provides/services/firestore_service.dart';
 import 'package:plantao_farma/utils/app_color.dart';
+import 'package:provider/provider.dart';
 
 class AreaADMScreen extends StatefulWidget {
   const AreaADMScreen({ Key? key }) : super(key: key);
@@ -15,6 +20,8 @@ class AreaADMScreen extends StatefulWidget {
 class _AreaADMScreenState extends State<AreaADMScreen> {
   @override
   Widget build(BuildContext context) {
+    FirestoreService firestore = Provider.of<FirestoreService>(context);
+    final List<Farmacia> farmacia = firestore.list;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -71,6 +78,20 @@ class _AreaADMScreenState extends State<AreaADMScreen> {
                   ),
                 ),
               ),
+              SizedBox(
+                child: Text('Lista de Farmacias Cadastradas'),
+              ),
+              Padding(padding: EdgeInsets.only(bottom: 10)),
+              SizedBox(
+                height: MediaQuery.of(context).size.height-215,
+                child: ListView.builder(
+                  itemCount: farmacia.length,
+                  itemBuilder: (_, index){
+                    return ListFarmaciasAdm(farmacia: farmacia[index]);
+                  }
+                ),
+              ),
+
             ],
           ),
         ),

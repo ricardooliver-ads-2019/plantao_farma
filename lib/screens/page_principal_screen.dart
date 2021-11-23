@@ -3,8 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:plantao_farma/components/app_bar_c.dart';
 import 'package:plantao_farma/components/farmacia_grid.dart';
-import 'package:plantao_farma/mocks/mock_farmacias.dart';
 import 'package:plantao_farma/models/farmacia.dart';
+import 'package:plantao_farma/provides/services/firestore_service.dart';
+import 'package:provider/provider.dart';
 
 class PagePrincipalScreen extends StatefulWidget {
   const PagePrincipalScreen({ Key? key }) : super(key: key);
@@ -14,9 +15,10 @@ class PagePrincipalScreen extends StatefulWidget {
 }
 
 class _PagePrincipalScreenState extends State<PagePrincipalScreen> {
-  final List<Farmacia> farmacia = MockFarmacias;
   @override
   Widget build(BuildContext context) {
+  FirestoreService firestore = Provider.of<FirestoreService>(context);
+   final List<Farmacia> farmacia = firestore.list;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(

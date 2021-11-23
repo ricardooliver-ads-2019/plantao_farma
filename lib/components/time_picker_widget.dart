@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, implementation_imports
 
 import 'package:flutter/material.dart';
 import 'package:plantao_farma/provides/services/time_service.dart';

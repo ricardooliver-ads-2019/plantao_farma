@@ -1,9 +1,7 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors, avoid_unnecessary_containers, unused_local_variable, implementation_imports
+// ignore_for_file: prefer_const_constructors, implementation_imports, prefer_final_fields, unused_field, avoid_unnecessary_containers, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:plantao_farma/app_routes.dart';
-import 'package:plantao_farma/components/default_button.dart';
 import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/provides/services/auth_service.dart';
 import 'package:plantao_farma/provides/services/firestore_service.dart';
@@ -14,14 +12,16 @@ import 'package:plantao_farma/utils/app_color.dart';
 import 'package:provider/src/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
-class FormCadastFarmacia extends StatefulWidget {
-  const FormCadastFarmacia({ Key? key }) : super(key: key);
+import 'default_button.dart';
 
+class FormUpdateFarma extends StatefulWidget {
+  const FormUpdateFarma({ Key? key, required this.farmacia }) : super(key: key);
+  final Farmacia farmacia;
   @override
-  _FormCadastFarmaciaState createState() => _FormCadastFarmaciaState();
+  _FormUpdateFarmaState createState() => _FormUpdateFarmaState();
 }
 
-class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
+class _FormUpdateFarmaState extends State<FormUpdateFarma> {
   final _formKey = GlobalKey<FormState>();
   var _nameEC = TextEditingController();
   var _emailEC = TextEditingController();
@@ -35,6 +35,12 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
   String horaAber = "";
   String horaFech = "";
   bool? _platao;
+  @override
+  void initState() {
+    _nameEC.text = widget.farmacia.nome;
+    _cepEC.text = widget.farmacia.cnpj;
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -47,6 +53,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     _ederecoEC.dispose();
     super.dispose();
   }
+
 
   void clearTextEditingController(){
     //limpar formulario
@@ -63,6 +70,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
       _hFechamento = TimeOfDay(hour: 22, minute: 0);
     });
   }
+
 
   Future pickTimeAbertura(BuildContext context) async {
     final initialTime = TimeOfDay(hour: 9, minute: 0);
@@ -97,30 +105,27 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
       final minutes = _hFechamento!.minute.toString().padLeft(2, '0');
       horaFech = '$hours:$minutes';
       //print(horaFech);
-      context.read<TimeService>().getHorarioAbertura(newTime);
+      context.read<TimeService>().getHorarioFechamento(newTime);
     });
     
   }
-
-  cadastrar()async{
+  atualizar()async{
     var _farmacia = Farmacia(
-      logo: 'assets/images/imgFarmacias/imgFarmacia1.png', 
+      id: widget.farmacia.id,
+      logo: 'assets/images/imgFarmacias/imgFarmacia2.png', 
       horarioAbertura: _hAbertura!.toString(), 
-      horarioFechamento: _hFechamento!.toString(), 
+      horarioFechamento: _hFechamento!.toString(),
       plantao: _platao!,
       cnpj: _cnpjEC.text,
       nome: _nameEC.text,
     );
     try{
-      await context.read<FirestoreService>().cadastrar(_farmacia);
+      await context.read<FirestoreService>().update(_farmacia);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Center(child: Icon(Icons.check, size: 50, color: Colors.green))));
-      clearTextEditingController();
-      Navigator.of(context).pushReplacementNamed(AppRoutes.AREA_ADM);
     } on FirestoreExceptions catch (e){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     }
   }
-
   @override
   Widget build(BuildContext context) {
     AuthService auth = Provider.of<AuthService>(context);
@@ -128,12 +133,14 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Form(
+        autovalidateMode: AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [            
             Container(
               child: TextFormField(
+
                 controller: _nameEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -404,19 +411,9 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                         imageSrc: AppAssets.iconEnviar,
                         text: "Salvar!",
                         press: () {
-                          var formValid = _formKey.currentState?.validate() ?? false;
-                          if(formValid){
-                            if (auth.isLoading) {
-                              return loading();
-                            }else if(auth.usuario == null){
-                              //volta para pagina de login
-                              return LoginScreen();
-                            }else{
-                              //salvando no firebase
-                              return cadastrar();
-                            }
+                          atualizar();
                           }
-                        },
+                        ,
                       ),
                     ),
                   ),

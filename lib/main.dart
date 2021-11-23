@@ -10,6 +10,7 @@ import 'package:plantao_farma/screens/home_screen.dart';
 import 'package:plantao_farma/screens/login_screen.dart';
 import 'package:plantao_farma/screens/page_cadast_farma.dart';
 import 'package:plantao_farma/screens/page_principal_screen.dart';
+import 'package:plantao_farma/screens/page_update_farma.dart';
 import 'package:plantao_farma/screens/splash_screen.dart';
 import 'package:plantao_farma/utils/auth_check.dart';
 import 'package:provider/provider.dart';

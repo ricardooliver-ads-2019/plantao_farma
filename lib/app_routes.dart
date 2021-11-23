@@ -7,6 +7,7 @@ class AppRoutes{
   static final AUTHCHECK = '/AuthCheck';
   static final PAGEPRINCIAL = '/page_principal';
   static final AREA_ADM = '/area_adm';
-  static final CADASTRAR_FARMACIA = '/page_principal_screen';
+  static final CADASTRAR_FARMACIA = '/page_cadastrarFarmacia_screen';
+  static final ATUALIZAR_FARMACIA = '/page_updateFarmacia_screen';
   static final AREA_USER_FARMA = '/area_user_farmacia';
 }
