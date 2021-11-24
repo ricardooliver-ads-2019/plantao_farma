@@ -35,6 +35,8 @@ class FirestoreService extends ChangeNotifier{
         'logo': farmacia.logo,
         'horarioAbertura': farmacia.horarioAbertura,
         'horarioFechamento': farmacia.horarioFechamento,
+        'horaAber': farmacia.horarioA,
+        'horaFech': farmacia.horarioF,
         'plantao':farmacia.plantao,
       });
 
@@ -55,21 +57,24 @@ class FirestoreService extends ChangeNotifier{
       (event) { 
         list.clear();
         for (DocumentSnapshot item in event.docs) {
-          var name = item.get('name');
-          var dados = item.id;
+          //var docs = item.data();
+          //var name = item.get('name');
+          //var dados = item.id;
           Farmacia farma = Farmacia(
             id: item.id,
             nome: item.get('name'), 
             cnpj: item.get('cnpj'), 
             logo: item.get('logo'), 
             horarioAbertura: item.get('horarioAbertura'), 
-            horarioFechamento: item.get('horarioFechamento'), 
+            horarioFechamento: item.get('horarioFechamento'),
+            horarioA: item.get('horaAber'),
+            horarioF: item.get('horaFech'), 
             plantao: item.get('plantao')
           );
             
             list.add(farma);
             notifyListeners();
-          print('Dasdos exibicao: + ${dados} - ${name}');
+          print('Dasdos exibicao: ${farma} - ${farma.nome} -  ${farma.horarioA}');
         }
         
       }
@@ -92,6 +97,8 @@ class FirestoreService extends ChangeNotifier{
         logo: doc.get('logo'), 
         horarioAbertura: doc.get('horarioAbertura'), 
         horarioFechamento: doc.get('horarioFechamento'), 
+        horarioA: doc.get('horaAber'),
+        horarioF: doc.get('horaFech'),
         plantao: doc.get('plantao'),
       );
         list.add(farmacia);
@@ -111,6 +118,8 @@ class FirestoreService extends ChangeNotifier{
         'logo': farmacia.logo,
         'horarioAbertura': farmacia.horarioAbertura,
         'horarioFechamento': farmacia.horarioFechamento,
+        'horaAber': farmacia.horarioA,
+        'horaFech': farmacia.horarioF,
         'plantao':farmacia.plantao,
       });
      

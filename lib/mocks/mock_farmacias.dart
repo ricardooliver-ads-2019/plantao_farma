@@ -6,6 +6,8 @@ final mockFarmacias = [
     logo: 'assets/images/imgFarmacias/imgFarmacia1.png', 
     horarioAbertura: '09:30', 
     horarioFechamento: '22:30',
+    horarioA: [9, 30],
+    horarioF: [22, 30],
     plantao: false,
   ),
 

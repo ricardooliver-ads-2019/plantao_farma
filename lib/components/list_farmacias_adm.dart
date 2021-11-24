@@ -56,11 +56,13 @@ class _ListFarmaciasAdmState extends State<ListFarmaciasAdm> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
-                      child: Text("${widget.farmacia.nome}", style: GoogleFonts.oswald(
-                        color: Colors.grey,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),),
+                      child: Text("${widget.farmacia.nome}", 
+                        style: GoogleFonts.oswald(
+                          color: Colors.grey,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     SizedBox(height: 10),
                     Padding(

@@ -30,10 +30,10 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
   var _whatsaapEC = TextEditingController();
   var _cepEC = TextEditingController();
   var _ederecoEC = TextEditingController();
-  TimeOfDay? _hAbertura = TimeOfDay(hour: 8, minute: 0);
-  TimeOfDay? _hFechamento = TimeOfDay(hour: 22, minute: 0);
-  String horaAber = "";
-  String horaFech = "";
+  TimeOfDay? _hA = TimeOfDay(hour: 8, minute: 0);
+  TimeOfDay? _hF = TimeOfDay(hour: 22, minute: 0);
+  List<int> horaAber = [];
+  List<int> horaFech = [];
   bool? _platao;
 
   @override
@@ -59,8 +59,8 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
       _cepEC.clear();
       _ederecoEC.clear();
       _platao = false;
-      _hAbertura = TimeOfDay(hour: 8, minute: 0);
-      _hFechamento = TimeOfDay(hour: 22, minute: 0);
+      _hA = TimeOfDay(hour: 8, minute: 0);
+      _hF = TimeOfDay(hour: 22, minute: 0);
     });
   }
 
@@ -68,16 +68,17 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     final initialTime = TimeOfDay(hour: 9, minute: 0);
     final newTime = await showTimePicker(
       context: context,
-      initialTime: _hAbertura ?? initialTime,
+      initialTime: _hA ?? initialTime,
     );
 
     if (newTime == null) return;
 
-    setState(() { _hAbertura = newTime;
-      final hours = _hAbertura!.hour.toString().padLeft(2, '0');
-      final minutes = _hAbertura!.minute.toString().padLeft(2, '0');
-      horaAber = '$hours:$minutes';
-      //print(horaAber);
+    setState(() { _hA = newTime;
+      final hours = _hA!.hour.toString().padLeft(2, '0');
+      final minutes = _hA!.minute.toString().padLeft(2, '0');
+      horaAber.add(_hA!.hour);
+      horaAber.add(_hA!.minute);
+      //print("********************* ${horaAber}");
       context.read<TimeService>().getHorarioAbertura(newTime);
     });
     
@@ -87,16 +88,17 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     final initialTime = TimeOfDay(hour: 22, minute: 0);
     final newTime = await showTimePicker(
       context: context,
-      initialTime: _hFechamento ?? initialTime,
+      initialTime: _hF ?? initialTime,
     );
 
     if (newTime == null) return;
 
-    setState(() { _hFechamento = newTime;
-      final hours = _hFechamento!.hour.toString().padLeft(2, '0');
-      final minutes = _hFechamento!.minute.toString().padLeft(2, '0');
-      horaFech = '$hours:$minutes';
-      //print(horaFech);
+    setState(() { _hF = newTime;
+      final hours = _hF!.hour.toString().padLeft(2, '0');
+      final minutes = _hF!.minute.toString().padLeft(2, '0');
+      horaFech.add(_hF!.hour);
+      horaFech.add(_hF!.minute);
+      //print('Tadoido***** ${horaFech}');
       context.read<TimeService>().getHorarioAbertura(newTime);
     });
     
@@ -105,8 +107,10 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
   cadastrar()async{
     var _farmacia = Farmacia(
       logo: 'assets/images/imgFarmacias/imgFarmacia1.png', 
-      horarioAbertura: _hAbertura!.toString(), 
-      horarioFechamento: _hFechamento!.toString(), 
+      horarioAbertura: _hA!.hour.toString().padLeft(2, '0') + ' : ' + _hA!.minute.toString().padLeft(2, '0'), 
+      horarioFechamento: _hF!.hour.toString().padLeft(2, '0') + ' : ' + _hF!.minute.toString().padLeft(2, '0'),
+      horarioA: horaAber,
+      horarioF: horaFech, 
       plantao: _platao!,
       cnpj: _cnpjEC.text,
       nome: _nameEC.text,
@@ -290,7 +294,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text("${_hAbertura!.hour.toString().padLeft(2, '0')} : ${_hAbertura!.minute.toString().padLeft(2, '0')}",
+                            Text("${_hA!.hour.toString().padLeft(2, '0')} : ${_hA!.minute.toString().padLeft(2, '0')}",
                               style: GoogleFonts.nunito(
                                 color: AppColor.bgColor,
                                 fontSize: 15.0,
@@ -321,7 +325,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                              SizedBox(
                               height: 10,
                             ),
-                            Text("${_hFechamento!.hour.toString().padLeft(2, '0')} : ${_hFechamento!.minute.toString().padLeft(2, '0')}",
+                            Text("${_hF!.hour.toString().padLeft(2, '0')} : ${_hF!.minute.toString().padLeft(2, '0')}",
                               style: GoogleFonts.nunito(
                                 color: AppColor.bgColor,
                                 fontSize: 15.0,

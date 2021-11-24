@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace, unnecessary_string_interpolations
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +16,12 @@ class FarmaciaGrid extends StatefulWidget {
 class _FarmaciaGridState extends State<FarmaciaGrid> {
   @override
   Widget build(BuildContext context) {
+    TimeOfDay horaAtual = TimeOfDay.now();
+    int horaAtu = horaAtual.hour *60 + horaAtual.minute;
+    TimeOfDay horaFechamento = TimeOfDay(hour: widget.farmacia.horarioF[0], minute: widget.farmacia.horarioF[1]);
+    int horaFech = horaFechamento.hour * 60 + horaFechamento.minute;
+    TimeOfDay horaAbertura = TimeOfDay(hour: widget.farmacia.horarioA[0], minute: widget.farmacia.horarioA[1]);
+    int horaAber = horaAbertura.hour * 60 + horaAbertura.minute;
     return Padding(
       padding: const EdgeInsets.only(bottom: 30, left: 10, right: 10),
       child: Container(
@@ -35,33 +41,53 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
                   image: DecorationImage(image: AssetImage(widget.farmacia.logo), fit: BoxFit.fill)
                 ),
               ),
-              SizedBox(
-                width: 10,
-              ),
-              Container(
-                height: 140,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text("Farmacia: ${widget.farmacia.nome}", style: GoogleFonts.oswald(
-                      color: Colors.grey,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                    SizedBox(height: 15),
-                    Text("Horario de Funcionamento", style: GoogleFonts.oswald(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                    SizedBox(height: 5),
-                    Text("${widget.farmacia.horarioAbertura} - ${widget.farmacia.horarioFechamento}", style: GoogleFonts.oswald(
-                      color: Colors.grey,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),),
-                     Image.asset(widget.farmacia.plantao ? AppAssets.buttonON : AppAssets.buttonOFF, width: 50,) 
-                  ],
+              
+              Expanded(
+                child: Container(
+                  height: 140,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${widget.farmacia.nome}", 
+                        style: GoogleFonts.oswald(
+                          color: Colors.grey,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 15),
+                            Text("Horario de Funcionamento", style: GoogleFonts.oswald(
+                              color: Colors.grey,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),),
+                            Text("${widget.farmacia.horarioAbertura} - ${widget.farmacia.horarioFechamento}", style: GoogleFonts.oswald(
+                              color: Colors.grey,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),),
+                            SizedBox(height: 5),
+                          ],
+                        ),
+                      ),
+                       Expanded(
+                         child: Container(
+                           color: Colors.grey.withOpacity(0.2),
+                           child: Row(
+                             mainAxisAlignment: MainAxisAlignment.center,
+                             children: [
+                               Image.asset((horaAber <= horaAtu) & (horaAtu < horaFech) ? AppAssets.buttonON : AppAssets.buttonOFF, width: 70,),
+                             ],
+                           ),
+                         ),
+                       ) 
+                    ],
+                  ),
                 ),
               ),    
             ],

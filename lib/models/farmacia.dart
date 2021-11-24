@@ -6,6 +6,8 @@ class Farmacia{
   final String logo;
   final String horarioAbertura;
   final String horarioFechamento;
+  final List<dynamic> horarioA;
+  final List<dynamic> horarioF;
   final bool plantao;
 
   Farmacia({
@@ -15,6 +17,8 @@ class Farmacia{
     required this.logo,
     required this.horarioAbertura, 
     required this.horarioFechamento, 
+    required this.horarioA,
+    required this.horarioF,
     required this.plantao,  
   });
 

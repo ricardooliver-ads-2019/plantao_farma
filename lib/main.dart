@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            initialRoute: AppRoutes.SPLASH,
+            initialRoute: AppRoutes.PAGEPRINCIAL,
             routes: {
               AppRoutes.SPLASH: (context) => SplashScreen(),
               AppRoutes.HOME: (context) => HomeScreen(),
