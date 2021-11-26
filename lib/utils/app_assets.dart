@@ -7,5 +7,7 @@ class AppAssets{
   static const buttonOFF = 'assets/images/imgButtonOFF.png';
   static const buttonReset = 'assets/images/iconReset.png';
   static const iconEnviar = 'assets/images/imgIconEnviar.png';
+  static const imgFarma = 'assets/images/imgFarSaoPaulo.jpg';
+  static const imgMaps = 'assets/images/imgGoogleMaps.jpg';
   
 }

@@ -1,6 +1,4 @@
-
-// ignore_for_file: unused_element
-
+// ignore_for_file: unused_element, avoid_print, unnecessary_brace_in_string_interps, await_only_futures
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plantao_farma/models/farmacia.dart';
@@ -13,6 +11,7 @@ class FirestoreExceptions implements Exception{
 class FirestoreService extends ChangeNotifier{
   final FirebaseFirestore dbFirestore = FirebaseFirestore.instance;
   List<Farmacia> list = [];
+  List<Farmacia> listDetailFarma = [];
   String collectionFirestore = 'farmacias';
   bool isLoading = true;
 
@@ -24,6 +23,11 @@ class FirestoreService extends ChangeNotifier{
   _startFirestore()async{
     //await _listFirestore();
     await _listFirestoreAtual();
+  }
+
+  void _addList(Farmacia farma) async{
+    listDetailFarma.add(farma);
+    notifyListeners();
   }
 
 
@@ -52,7 +56,7 @@ class FirestoreService extends ChangeNotifier{
   }
 
   _listFirestoreAtual() async{
-
+    
     await dbFirestore.collection(collectionFirestore).snapshots().listen(
       (event) { 
         list.clear();
@@ -82,6 +86,36 @@ class FirestoreService extends ChangeNotifier{
     
   }
 
+  listDetailsFarmaFirestore(Farmacia farmacia) async{
+    
+    // metodo para buscar um registro pelo seu id
+    await dbFirestore.collection(collectionFirestore).doc(farmacia.id).snapshots().listen(
+      (event) {
+          listDetailFarma.clear();
+          Farmacia farma = Farmacia(
+            id: event.id,
+            nome: event.get('name'), 
+            cnpj: event.get('cnpj'), 
+            logo: event.get('logo'), 
+            horarioAbertura: event.get('horarioAbertura'), 
+            horarioFechamento: event.get('horarioFechamento'),
+            horarioA: event.get('horaAber'),
+            horarioF: event.get('horaFech'), 
+            plantao: event.get('plantao')
+          );
+          listDetailFarma.add(farma);
+          notifyListeners();
+          notifyListeners();
+          notifyListeners();
+          notifyListeners();
+          notifyListeners();
+          print('**********: ${farma} - ${farma.nome} -  ${farma.horarioA}');
+          print('List teste ${listDetailFarma}');
+        
+
+    });
+  }
+  
 
 
 
@@ -89,7 +123,7 @@ class FirestoreService extends ChangeNotifier{
    
   _listFirestore() async{
     var result = await dbFirestore.collection(collectionFirestore).get();
-    for (var doc in result.docs) {
+    for (var doc in result.docs) {  
       Farmacia farmacia = Farmacia(
         id: doc.reference.id.toString(),
         nome: doc.get('name'),
@@ -106,6 +140,8 @@ class FirestoreService extends ChangeNotifier{
 
     }
   }
+
+
 
 
   

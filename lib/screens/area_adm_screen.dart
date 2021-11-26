@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/app_routes.dart';
-import 'package:plantao_farma/components/farmacia_grid.dart';
+
 import 'package:plantao_farma/components/list_farmacias_adm.dart';
 import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/provides/services/firestore_service.dart';

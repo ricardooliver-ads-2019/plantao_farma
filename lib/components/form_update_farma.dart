@@ -6,7 +6,6 @@ import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/provides/services/auth_service.dart';
 import 'package:plantao_farma/provides/services/firestore_service.dart';
 import 'package:plantao_farma/provides/services/time_service.dart';
-import 'package:plantao_farma/screens/login_screen.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
 import 'package:plantao_farma/utils/app_color.dart';
 import 'package:provider/src/provider.dart';

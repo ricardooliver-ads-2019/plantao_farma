@@ -1,10 +1,12 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace, unnecessary_string_interpolations
-
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace, unnecessary_string_interpolations, implementation_imports
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/models/farmacia.dart';
+import 'package:plantao_farma/provides/services/firestore_service.dart';
+import 'package:plantao_farma/screens/page_details_farma_screen.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
 import 'package:plantao_farma/utils/app_color.dart';
+import 'package:provider/src/provider.dart';
 
 class FarmaciaGrid extends StatefulWidget {
   const FarmaciaGrid({ Key? key, required this.farmacia }) : super(key: key);
@@ -14,11 +16,25 @@ class FarmaciaGrid extends StatefulWidget {
 }
 
 class _FarmaciaGridState extends State<FarmaciaGrid> {
+
+  listarDetailsFarma()async{
+    try{
+      await context.read<FirestoreService>().listDetailsFarmaFirestore(widget.farmacia);
+    } on FirestoreExceptions catch (e){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    // pegendo a hora atual
     TimeOfDay horaAtual = TimeOfDay.now();
-    int horaAtu = horaAtual.hour *60 + horaAtual.minute;
+    // tranformando a hora atual para minutos 
+    int horaAtu = horaAtual.hour *60 + horaAtual.minute; 
+    // pegando a hora de fechamento da farmacia
     TimeOfDay horaFechamento = TimeOfDay(hour: widget.farmacia.horarioF[0], minute: widget.farmacia.horarioF[1]);
+    // pegando a hora de fechamento da farmacia 
     int horaFech = horaFechamento.hour * 60 + horaFechamento.minute;
     TimeOfDay horaAbertura = TimeOfDay(hour: widget.farmacia.horarioA[0], minute: widget.farmacia.horarioA[1]);
     int horaAber = horaAbertura.hour * 60 + horaAbertura.minute;
@@ -49,18 +65,20 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("${widget.farmacia.nome}", 
-                        style: GoogleFonts.oswald(
-                          color: Colors.grey,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      Center(
+                        child: Text("${widget.farmacia.nome}", 
+                          style: GoogleFonts.oswald(
+                            color: Colors.grey,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SizedBox(height: 15),
+                            SizedBox(height: 5),
                             Text("Horario de Funcionamento", style: GoogleFonts.oswald(
                               color: Colors.grey,
                               fontSize: 14,
@@ -92,7 +110,13 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
               ),    
             ],
           ),
-          onTap: (){},
+          onTap: (
+
+          ){
+            listarDetailsFarma();
+            Future.delayed(Duration(seconds: 5));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> PageDetailsFarmaScreen(farmacia: widget.farmacia)));
+          },
         ),
       ),
     );

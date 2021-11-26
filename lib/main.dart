@@ -65,13 +65,14 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'Plantão Farma',
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primarySwatch: Colors.red,
             ),
             initialRoute: AppRoutes.PAGEPRINCIAL,
             routes: {
               AppRoutes.SPLASH: (context) => SplashScreen(),
               AppRoutes.HOME: (context) => HomeScreen(),
               AppRoutes.PAGEPRINCIAL: (context) => PagePrincipalScreen(),
+              //AppRoutes.PAGEDETAILSFARMA: (context) => PageDetailsFarmaScreen(),
               AppRoutes.AUTHCHECK: (context) => AuthCheck(),
               AppRoutes.LOGIN: (context) => LoginScreen(),
               AppRoutes.AREA_ADM: (context) => AreaADMScreen(),
