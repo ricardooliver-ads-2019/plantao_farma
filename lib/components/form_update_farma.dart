@@ -25,31 +25,57 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
   var _nameEC = TextEditingController();
   var _emailEC = TextEditingController();
   var _cnpjEC = TextEditingController();
+  var _logoEC = TextEditingController();
   var _telefoneEC = TextEditingController();
+  var _telefone2EC = TextEditingController();
   var _whatsaapEC = TextEditingController();
+  var _enderecoEC = TextEditingController();
+  var _bairroEC = TextEditingController();
+  var _cidadeEC = TextEditingController();
+  var _ufEC = TextEditingController();
   var _cepEC = TextEditingController();
-  var _ederecoEC = TextEditingController();
   TimeOfDay? _hA = TimeOfDay(hour: 8, minute: 0);
   TimeOfDay? _hF = TimeOfDay(hour: 22, minute: 0);
-  List<int> horaAber = [];
-  List<int> horaFech = [];
+  List<int> horaAber = [8, 0];
+  List<int> horaFech = [22, 0];
   bool? _platao;
   @override
   void initState() {
+    horaAber[0] = widget.farmacia.horarioA[0];
+    horaAber[1] = widget.farmacia.horarioA[1];
+    horaFech[0] = widget.farmacia.horarioF[0];
+    horaAber[1] = widget.farmacia.horarioF[1];
+    _hA = TimeOfDay(hour: widget.farmacia.horarioA[0], minute: widget.farmacia.horarioA[1]);
+    _hF = TimeOfDay(hour: widget.farmacia.horarioF[0], minute: widget.farmacia.horarioF[1]);
+    _platao = widget.farmacia.plantao;
     _nameEC.text = widget.farmacia.nome;
-    _cepEC.text = widget.farmacia.cnpj;
+    _cnpjEC.text = widget.farmacia.cnpj;
+    _emailEC.text = widget.farmacia.email;
+    _logoEC.text = widget.farmacia.logo;
+    _telefoneEC.text = widget.farmacia.telefone;
+    _whatsaapEC.text = widget.farmacia.whatsapp;  
+    _enderecoEC.text = widget.farmacia.endereco;
+    _bairroEC.text = widget.farmacia.bairro;
+    _cidadeEC.text = widget.farmacia.cidade;
+    _cepEC.text = widget.farmacia.cep;
+    _ufEC.text = widget.farmacia.uf;
     super.initState();
   }
 
+  
   @override
   void dispose() {
     _nameEC.dispose();
     _emailEC.dispose();
     _cnpjEC.dispose();
-    _telefoneEC.dispose();
+   _telefoneEC.dispose();
+    _telefone2EC.dispose();
     _whatsaapEC.dispose();   
+    _enderecoEC.dispose();
+    _bairroEC.dispose();
+    _cidadeEC.dispose();
     _cepEC.dispose();
-    _ederecoEC.dispose();
+    _ufEC.dispose();
     super.dispose();
   }
 
@@ -60,10 +86,15 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
       _nameEC.clear();
       _emailEC.clear();
       _cnpjEC.clear();
+      _logoEC.clear();
       _telefoneEC.clear();
+      _telefone2EC.clear();
       _whatsaapEC.clear();
+      _enderecoEC.clear();
+      _bairroEC.clear();
+      _cidadeEC.clear();
       _cepEC.clear();
-      _ederecoEC.clear();
+      _ufEC.clear();
       _platao = false;
       _hA = TimeOfDay(hour: 8, minute: 0);
       _hF = TimeOfDay(hour: 22, minute: 0);
@@ -83,6 +114,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
     setState(() { _hA = newTime;
       final hours = _hA!.hour.toString().padLeft(2, '0');
       final minutes = _hA!.minute.toString().padLeft(2, '0');
+      horaAber.clear();
       horaAber.add(_hA!.hour);
       horaAber.add(_hA!.minute);
       //print(horaAber);
@@ -103,6 +135,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
     setState(() { _hF = newTime;
       final hours = _hF!.hour.toString().padLeft(2, '0');
       final minutes = _hF!.minute.toString().padLeft(2, '0');
+      horaFech.clear();
       horaFech.add(_hF!.hour);
       horaFech.add(_hF!.minute);
       //print(horaFech);
@@ -110,17 +143,51 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
     });
     
   }
+
+  getHorasParaMinutos(TimeOfDay horas){
+     // tranformando a hora para minutos
+    var minutos = horas.hour * 60 + horas.minute;
+    return minutos;
+  }
+
+
+  conferiSeHoraAberturaeMenorQHoraFechamennto(TimeOfDay horaA, TimeOfDay horaF){
+    // discubrindo qual das horas é a maior
+    var horaAberMinutos = getHorasParaMinutos(horaA);
+    var horaFechMinutos = getHorasParaMinutos(horaF);
+    if (horaAberMinutos >= horaFechMinutos) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+
+
+
+
   atualizar()async{
     var _farmacia = Farmacia(
       id: widget.farmacia.id,
-      logo: 'assets/images/imgFarmacias/imgFarmacia2.png', 
+      nome: _nameEC.text,
+      cnpj: _cnpjEC.text,
+      email: _emailEC.text,
+      logo: 'assets/images/imgFarmacias/imgFarmacia2.png',
+      telefone: _telefoneEC.text, 
+      telefone2: _telefone2EC.text,
+      whatsapp: _whatsaapEC.text,
+      endereco: _enderecoEC.text,
+      bairro: _bairroEC.text,
+      cidade: _cidadeEC.text,
+      cep: _cepEC.text,
+      uf: _ufEC.text, 
       horarioAbertura: _hA!.hour.toString().padLeft(2, '0') + ' : ' + _hA!.minute.toString().padLeft(2, '0'), 
       horarioFechamento: _hF!.hour.toString().padLeft(2, '0') + ' : ' + _hF!.minute.toString().padLeft(2, '0'),
       horarioA: horaAber,
       horarioF: horaFech,
       plantao: _platao!,
-      cnpj: _cnpjEC.text,
-      nome: _nameEC.text,
+      
+      
     );
     try{
       await context.read<FirestoreService>().update(_farmacia);
@@ -218,6 +285,22 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
             Container(
               child: TextFormField(
                 keyboardType: TextInputType.phone,
+                controller: _telefone2EC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Telefone2",
+                  hintText: "Informe um segundo telefone para cadastro",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+              ),
+            ),
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.phone,
                 controller: _whatsaapEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -232,8 +315,64 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
                 validator: Validatorless.required('Campo obrigatório!'),
               ),
             ),
+            
             Container(
               child: TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                controller: _enderecoEC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Endereço",
+                  hintText: "Informe o Endereço do estabelecimento",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+                validator: Validatorless.required('Campo obrigatório!'),
+              ),
+            ),
+
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                controller: _bairroEC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Bairro",
+                  hintText: "Informe o Bairro do estabelecimento",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+                validator: Validatorless.required('Campo obrigatório!'),
+              ),
+            ),
+
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                controller: _cidadeEC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Cidade",
+                  hintText: "Informe a cidade do estabelecimento",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+                validator: Validatorless.required('Campo obrigatório!'),
+              ),
+            ),
+
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.phone,
                 controller: _cepEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -248,16 +387,18 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
                 validator: Validatorless.required('Campo obrigatório!'),
               ),
             ),
+
             Container(
               child: TextFormField(
-                controller: _ederecoEC,
+                keyboardType: TextInputType.name,
+                controller: _ufEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  labelText: "Endereço",
-                  hintText: "Informe o Endereço do estabelecimento",
+                  labelText: "UF",
+                  hintText: "Informe a sigla do Estado ex: RO",
                   hintStyle: TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey)
                 ),
@@ -414,8 +555,21 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
                         imageSrc: AppAssets.iconEnviar,
                         text: "Salvar!",
                         press: () {
-                          atualizar();
+                          var formValid = _formKey.currentState?.validate() ?? false;
+                          if (!conferiSeHoraAberturaeMenorQHoraFechamennto(_hA!, _hF!) & (formValid)) {
+                            atualizar();
+                            
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Column(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                Text('Horario de Fechamento Invalido!'),
+                                Text('O Horario de Fechamento NÃO pode ser menor ou igual ao horario de Abertura'),
+                              ],
+                            )));
                           }
+                          
+                        }
                         ,
                       ),
                     ),

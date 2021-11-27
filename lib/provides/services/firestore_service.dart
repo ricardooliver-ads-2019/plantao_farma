@@ -1,4 +1,6 @@
 // ignore_for_file: unused_element, avoid_print, unnecessary_brace_in_string_interps, await_only_futures
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plantao_farma/models/farmacia.dart';
@@ -36,7 +38,16 @@ class FirestoreService extends ChangeNotifier{
       await dbFirestore.collection(collectionFirestore).doc().set({
         'name': farmacia.nome,
         'cnpj': farmacia.cnpj,
+        'email': farmacia.email,
         'logo': farmacia.logo,
+        'telefone': farmacia.telefone,
+        'telefone2': farmacia.telefone2,
+        'whatsapp': farmacia.whatsapp,
+        'endereco': farmacia.endereco,
+        'bairro': farmacia.bairro,
+        'cidade': farmacia.cidade,
+        'uf': farmacia.uf,
+        'cep': farmacia.cep,
         'horarioAbertura': farmacia.horarioAbertura,
         'horarioFechamento': farmacia.horarioFechamento,
         'horaAber': farmacia.horarioA,
@@ -56,7 +67,7 @@ class FirestoreService extends ChangeNotifier{
   }
 
   _listFirestoreAtual() async{
-    
+    list.clear();
     await dbFirestore.collection(collectionFirestore).snapshots().listen(
       (event) { 
         list.clear();
@@ -64,11 +75,21 @@ class FirestoreService extends ChangeNotifier{
           //var docs = item.data();
           //var name = item.get('name');
           //var dados = item.id;
+          
           Farmacia farma = Farmacia(
             id: item.id,
             nome: item.get('name'), 
-            cnpj: item.get('cnpj'), 
-            logo: item.get('logo'), 
+            cnpj: item.get('cnpj'),
+            email: item.get('email'), 
+            logo: item.get('logo'),
+            telefone: item.get('telefone'),
+            telefone2: item.get('telefone2'),
+            whatsapp: item.get('whatsapp'),
+            endereco: item.get('endereco'),
+            bairro: item.get('bairro'),
+            cidade: item.get('cidade'),
+            cep: item.get('cep'),
+            uf: item.get('uf'),         
             horarioAbertura: item.get('horarioAbertura'), 
             horarioFechamento: item.get('horarioFechamento'),
             horarioA: item.get('horaAber'),
@@ -78,7 +99,7 @@ class FirestoreService extends ChangeNotifier{
             
             list.add(farma);
             notifyListeners();
-          print('Dasdos exibicao: ${farma} - ${farma.nome} -  ${farma.horarioA}');
+          print('Dasdos exibicao: ${farma} - ${farma.nome} -  ${farma.horarioA} - ${farma.horarioF}');
         }
         
       }
@@ -95,8 +116,17 @@ class FirestoreService extends ChangeNotifier{
           Farmacia farma = Farmacia(
             id: event.id,
             nome: event.get('name'), 
-            cnpj: event.get('cnpj'), 
-            logo: event.get('logo'), 
+            cnpj: event.get('cnpj'),
+            email: event.get('email'), 
+            logo: event.get('logo'),
+            telefone: event.get('telefone'),
+            telefone2: event.get('telefone2'),
+            whatsapp: event.get('whatsapp'),
+            endereco: event.get('endereco'),
+            bairro: event.get('bairro'),
+            cidade: event.get('cidade'),
+            cep: event.get('cep'),
+            uf: event.get('uf'), 
             horarioAbertura: event.get('horarioAbertura'), 
             horarioFechamento: event.get('horarioFechamento'),
             horarioA: event.get('horaAber'),
@@ -127,8 +157,17 @@ class FirestoreService extends ChangeNotifier{
       Farmacia farmacia = Farmacia(
         id: doc.reference.id.toString(),
         nome: doc.get('name'),
-        cnpj: doc.get('cnpj'),  
-        logo: doc.get('logo'), 
+        cnpj: doc.get('cnpj'),
+        email: doc.get('email'),  
+        logo: doc.get('logo'),
+        telefone: doc.get('telefone'),
+        telefone2: doc.get('telefone2'),
+        whatsapp: doc.get('whatsapp'),
+        endereco: doc.get('endereco'),
+        bairro: doc.get('bairro'),
+        cidade: doc.get('cidade'),
+        cep: doc.get('cep'),
+        uf: doc.get('uf'), 
         horarioAbertura: doc.get('horarioAbertura'), 
         horarioFechamento: doc.get('horarioFechamento'), 
         horarioA: doc.get('horaAber'),
@@ -167,10 +206,15 @@ class FirestoreService extends ChangeNotifier{
 
   }
 
-  remove(Farmacia farma) async{
-    //list.remove(farma);
-    //notifyListeners();
-    dbFirestore.collection(collectionFirestore).doc(farma.id).delete();
+  remove(Farmacia farma) async{  
+    if (list.length == 1){
+      dbFirestore.collection(collectionFirestore).doc(farma.id).delete();
+      list.remove(farma);
+      notifyListeners();
+    }else{
+      dbFirestore.collection(collectionFirestore).doc(farma.id).delete();
+    }
+    
 
   }
 

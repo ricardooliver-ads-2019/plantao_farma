@@ -17,6 +17,8 @@ class FarmaciaGrid extends StatefulWidget {
 
 class _FarmaciaGridState extends State<FarmaciaGrid> {
 
+  bool on_off = false;
+
   listarDetailsFarma()async{
     try{
       await context.read<FirestoreService>().listDetailsFarmaFirestore(widget.farmacia);
@@ -25,21 +27,40 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
     }
   }
 
+  getHorasParaMinutos(TimeOfDay horas){
+     // tranformando a hora para minutos
+    var minutos = horas.hour * 60 + horas.minute;
+    return minutos;
+  }
+
+  abertaOUfechada(int horaAtual, int horaAbrir, int horaFechar){
+    if ((horaAbrir <= horaAtual) & (horaAtual < horaFechar)) {
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  
+
+
+
 
   @override
   Widget build(BuildContext context) {
     // pegendo a hora atual
     TimeOfDay horaAtual = TimeOfDay.now();
     // tranformando a hora atual para minutos 
-    int horaAtu = horaAtual.hour *60 + horaAtual.minute; 
+    int horaAtu = getHorasParaMinutos(horaAtual); 
     // pegando a hora de fechamento da farmacia
     TimeOfDay horaFechamento = TimeOfDay(hour: widget.farmacia.horarioF[0], minute: widget.farmacia.horarioF[1]);
-    // pegando a hora de fechamento da farmacia 
-    int horaFech = horaFechamento.hour * 60 + horaFechamento.minute;
+    int horaFech = getHorasParaMinutos(horaFechamento); 
+    // pegando a hora de Abertura da farmacia 
     TimeOfDay horaAbertura = TimeOfDay(hour: widget.farmacia.horarioA[0], minute: widget.farmacia.horarioA[1]);
-    int horaAber = horaAbertura.hour * 60 + horaAbertura.minute;
+    int horaAber = getHorasParaMinutos(horaAbertura); 
+    on_off = abertaOUfechada(horaAtu, horaAber, horaFech);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30, left: 10, right: 10),
+      padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(width: 1, color: AppColor.primaryColor),
@@ -99,7 +120,7 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
                            child: Row(
                              mainAxisAlignment: MainAxisAlignment.center,
                              children: [
-                               Image.asset((horaAber <= horaAtu) & (horaAtu < horaFech) ? AppAssets.buttonON : AppAssets.buttonOFF, width: 70,),
+                               Image.asset(on_off ? AppAssets.buttonON : AppAssets.buttonOFF, width: 70,),
                              ],
                            ),
                          ),
@@ -115,7 +136,7 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
           ){
             listarDetailsFarma();
             Future.delayed(Duration(seconds: 5));
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> PageDetailsFarmaScreen(farmacia: widget.farmacia)));
+            Navigator.push(context, MaterialPageRoute(builder: (context)=> PageDetailsFarmaScreen(farmacia: widget.farmacia, on_off: on_off,)));
           },
         ),
       ),

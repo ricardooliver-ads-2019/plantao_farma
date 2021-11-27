@@ -27,13 +27,17 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
   var _emailEC = TextEditingController();
   var _cnpjEC = TextEditingController();
   var _telefoneEC = TextEditingController();
+  var _telefone2EC = TextEditingController();
   var _whatsaapEC = TextEditingController();
-  var _cepEC = TextEditingController();
-  var _ederecoEC = TextEditingController();
+  var _enderecoEC = TextEditingController();
+  var _bairroEC = TextEditingController();
+  var _cidadeEC = TextEditingController();
+  var _ufEC = TextEditingController();
+    var _cepEC = TextEditingController();
   TimeOfDay? _hA = TimeOfDay(hour: 8, minute: 0);
   TimeOfDay? _hF = TimeOfDay(hour: 22, minute: 0);
-  List<int> horaAber = [];
-  List<int> horaFech = [];
+  List<int> horaAber = [8, 0];
+  List<int> horaFech = [22, 0];
   bool? _platao;
 
   @override
@@ -42,9 +46,13 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     _emailEC.dispose();
     _cnpjEC.dispose();
     _telefoneEC.dispose();
+    _telefone2EC.dispose();
     _whatsaapEC.dispose();   
+    _enderecoEC.dispose();
+    _bairroEC.dispose();
+    _cidadeEC.dispose();
     _cepEC.dispose();
-    _ederecoEC.dispose();
+    _ufEC.dispose();
     super.dispose();
   }
 
@@ -55,9 +63,13 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
       _emailEC.clear();
       _cnpjEC.clear();
       _telefoneEC.clear();
+      _telefone2EC.clear();
       _whatsaapEC.clear();
+      _enderecoEC.clear();
+      _bairroEC.clear();
+      _cidadeEC.clear();
       _cepEC.clear();
-      _ederecoEC.clear();
+      _ufEC.clear();
       _platao = false;
       _hA = TimeOfDay(hour: 8, minute: 0);
       _hF = TimeOfDay(hour: 22, minute: 0);
@@ -76,6 +88,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     setState(() { _hA = newTime;
       final hours = _hA!.hour.toString().padLeft(2, '0');
       final minutes = _hA!.minute.toString().padLeft(2, '0');
+      horaAber.clear();
       horaAber.add(_hA!.hour);
       horaAber.add(_hA!.minute);
       //print("********************* ${horaAber}");
@@ -96,6 +109,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     setState(() { _hF = newTime;
       final hours = _hF!.hour.toString().padLeft(2, '0');
       final minutes = _hF!.minute.toString().padLeft(2, '0');
+      horaFech.clear();
       horaFech.add(_hF!.hour);
       horaFech.add(_hF!.minute);
       //print('Tadoido***** ${horaFech}');
@@ -104,16 +118,45 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     
   }
 
+  getHorasParaMinutos(TimeOfDay horas){
+     // tranformando a hora para minutos
+    var minutos = horas.hour * 60 + horas.minute;
+    return minutos;
+  }
+
+
+  conferiSeHoraAberturaeMenorQHoraFechamennto(TimeOfDay horaA, TimeOfDay horaF){
+    // discubrindo qual das horas é a maior
+    var horaAberMinutos = getHorasParaMinutos(horaA);
+    var horaFechMinutos = getHorasParaMinutos(horaF);
+    if (horaAberMinutos >= horaFechMinutos) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   cadastrar()async{
     var _farmacia = Farmacia(
-      logo: 'assets/images/imgFarmacias/imgFarmacia1.png', 
+      nome: _nameEC.text,
+      cnpj: _cnpjEC.text,
+      email: _emailEC.text,
+      logo: 'assets/images/imgFarmacias/imgFarmacia1.png',
+      telefone: _telefoneEC.text, 
+      telefone2: _telefone2EC.text,
+      whatsapp: _whatsaapEC.text,
+      endereco: _enderecoEC.text,
+      bairro: _bairroEC.text,
+      cidade: _cidadeEC.text,
+      cep: _cepEC.text,
+      uf: _ufEC.text,
       horarioAbertura: _hA!.hour.toString().padLeft(2, '0') + ' : ' + _hA!.minute.toString().padLeft(2, '0'), 
       horarioFechamento: _hF!.hour.toString().padLeft(2, '0') + ' : ' + _hF!.minute.toString().padLeft(2, '0'),
       horarioA: horaAber,
       horarioF: horaFech, 
       plantao: _platao!,
-      cnpj: _cnpjEC.text,
-      nome: _nameEC.text,
+      
+      
     );
     try{
       await context.read<FirestoreService>().cadastrar(_farmacia);
@@ -212,6 +255,22 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             Container(
               child: TextFormField(
                 keyboardType: TextInputType.phone,
+                controller: _telefone2EC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Telefone2",
+                  hintText: "Informe um segundo telefone para cadastro",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+              ),
+            ),
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.phone,
                 controller: _whatsaapEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -226,8 +285,64 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                 validator: Validatorless.required('Campo obrigatório!'),
               ),
             ),
+            
             Container(
               child: TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                controller: _enderecoEC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Endereço",
+                  hintText: "Informe o Endereço do estabelecimento",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+                validator: Validatorless.required('Campo obrigatório!'),
+              ),
+            ),
+
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                controller: _bairroEC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Bairro",
+                  hintText: "Informe o Bairro do estabelecimento",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+                validator: Validatorless.required('Campo obrigatório!'),
+              ),
+            ),
+
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.streetAddress,
+                controller: _cidadeEC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Cidade",
+                  hintText: "Informe a cidade do estabelecimento",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+                validator: Validatorless.required('Campo obrigatório!'),
+              ),
+            ),
+
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.phone,
                 controller: _cepEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -242,16 +357,18 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                 validator: Validatorless.required('Campo obrigatório!'),
               ),
             ),
+
             Container(
               child: TextFormField(
-                controller: _ederecoEC,
+                keyboardType: TextInputType.name,
+                controller: _ufEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
                 decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
                   focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                  labelText: "Endereço",
-                  hintText: "Informe o Endereço do estabelecimento",
+                  labelText: "UF",
+                  hintText: "Informe a sigla do Estado ex: RO",
                   hintStyle: TextStyle(color: Colors.grey),
                   labelStyle: TextStyle(color: Colors.grey)
                 ),
@@ -415,8 +532,19 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
                             }else if(auth.usuario == null){
                               //volta para pagina de login
                               return LoginScreen();
+                            }else if(conferiSeHoraAberturaeMenorQHoraFechamennto(_hA!, _hF!)){
+                              return ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Center(
+                                child: Column(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    Text('Horario de Fechamento Invalido!'),
+                                    Text('O Horario de Fechamento NÃO pode ser menor ou igual ao horario de Abertura'),
+                                  ],
+                                ),
+                              )));    
+                              
                             }else{
-                              //salvando no firebase
+                               //salvando no firebas
                               return cadastrar();
                             }
                           }
