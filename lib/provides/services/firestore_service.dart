@@ -12,6 +12,7 @@ class FirestoreService extends ChangeNotifier{
   final FirebaseFirestore dbFirestore = FirebaseFirestore.instance;
   List<Farmacia> list = [];
   List<Farmacia> listDetailFarma = [];
+  List<Farmacia> listFarmaPlantao = [];
   String collectionFirestore = 'farmacias';
   bool isLoading = true;
 
@@ -22,7 +23,11 @@ class FirestoreService extends ChangeNotifier{
 
   _startFirestore()async{
     //await _listFirestore();
+    await listFarmaPlantaoFirestore();
     await _listFirestoreAtual();
+    
+    
+    
   }
 
   void _addList(Farmacia farma) async{
@@ -66,7 +71,7 @@ class FirestoreService extends ChangeNotifier{
 
   _listFirestoreAtual() async{
     list.clear();
-    await dbFirestore.collection(collectionFirestore).snapshots().listen(
+    await dbFirestore.collection(collectionFirestore).orderBy('horarioFechamento', descending: true).snapshots().listen(
       (event) { 
         list.clear();
         for (DocumentSnapshot item in event.docs) {
@@ -97,6 +102,7 @@ class FirestoreService extends ChangeNotifier{
             
             list.add(farma);
             notifyListeners();
+            
           print('Dasdos exibicao: ${farma} - ${farma.nome} -  ${farma.horarioA} - ${farma.horarioF}');
         }
         
@@ -133,15 +139,54 @@ class FirestoreService extends ChangeNotifier{
           );
           listDetailFarma.add(farma);
           notifyListeners();
-          notifyListeners();
-          notifyListeners();
-          notifyListeners();
-          notifyListeners();
           print('**********: ${farma} - ${farma.nome} -  ${farma.horarioA}');
           print('List teste ${listDetailFarma}');
         
 
     });
+  }
+
+
+
+
+  listFarmaPlantaoFirestore() async{
+    
+    // metodo para listar as farmacias de plantao
+    await dbFirestore.collection(collectionFirestore).where('plantao', isEqualTo: true).snapshots().listen(
+      (event) { 
+        listFarmaPlantao.clear();
+        notifyListeners();
+        for (DocumentSnapshot item in event.docs) {
+          //var docs = item.data();
+          //var name = item.get('name');
+          //var dados = item.id;
+          
+          Farmacia farma = Farmacia(
+            id: item.id,
+            nome: item.get('name'), 
+            cnpj: item.get('cnpj'),
+            email: item.get('email'), 
+            logo: item.get('logo'),
+            telefone: item.get('telefone'),
+            telefone2: item.get('telefone2'),
+            whatsapp: item.get('whatsapp'),
+            endereco: item.get('endereco'),
+            bairro: item.get('bairro'),
+            cidade: item.get('cidade'),
+            cep: item.get('cep'),
+            uf: item.get('uf'),         
+            horarioAbertura: item.get('horarioAbertura'), 
+            horarioFechamento: item.get('horarioFechamento'),
+            horarioA: item.get('horaAber'),
+            horarioF: item.get('horaFech'), 
+            plantao: item.get('plantao')
+          );
+            
+            listFarmaPlantao.add(farma);
+            notifyListeners();
+          print('Dados Farmacia de Platão: ${farma} - ${farma.nome} -  ${farma.plantao} - ${farma.horarioF}');
+        }
+      });
   }
   
 
@@ -150,7 +195,7 @@ class FirestoreService extends ChangeNotifier{
 
    
   _listFirestore() async{
-    var result = await dbFirestore.collection(collectionFirestore).get();
+    var result = await dbFirestore.collection(collectionFirestore).where('plantao' == 'true').get();
     for (var doc in result.docs) {  
       Farmacia farmacia = Farmacia(
         id: doc.reference.id.toString(),
@@ -189,6 +234,15 @@ class FirestoreService extends ChangeNotifier{
         'name': farmacia.nome,
         'cnpj': farmacia.cnpj,
         'logo': farmacia.logo,
+        'email': farmacia.email,
+        'telefone': farmacia.telefone,
+        'telefone2': farmacia.telefone2,
+        'whatsapp': farmacia.whatsapp,
+        'endereco': farmacia.endereco,
+        'bairro': farmacia.bairro,
+        'cidade': farmacia.cidade,
+        'uf': farmacia.uf,
+        'cep': farmacia.cep,
         'horarioAbertura': farmacia.horarioAbertura,
         'horarioFechamento': farmacia.horarioFechamento,
         'horaAber': farmacia.horarioA,

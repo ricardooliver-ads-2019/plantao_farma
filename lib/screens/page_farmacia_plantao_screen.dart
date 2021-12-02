@@ -1,27 +1,25 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:plantao_farma/app_routes.dart';
 import 'package:plantao_farma/components/app_bar_c.dart';
 import 'package:plantao_farma/components/farmacia_grid.dart';
 import 'package:plantao_farma/components/navigator_bar.dart';
 import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/provides/services/firestore_service.dart';
-import 'package:plantao_farma/utils/app_color.dart';
 import 'package:provider/provider.dart';
 
-class PagePrincipalScreen extends StatefulWidget {
-  const PagePrincipalScreen({ Key? key }) : super(key: key);
+class PageFarmaciaPlantaoScrenn extends StatefulWidget {
+  const PageFarmaciaPlantaoScrenn({ Key? key }) : super(key: key);
 
   @override
-  _PagePrincipalScreenState createState() => _PagePrincipalScreenState();
+  _PageFarmaciaPlantaoScrennState createState() => _PageFarmaciaPlantaoScrennState();
 }
 
-class _PagePrincipalScreenState extends State<PagePrincipalScreen> {
+class _PageFarmaciaPlantaoScrennState extends State<PageFarmaciaPlantaoScrenn> {
   @override
   Widget build(BuildContext context) {
   FirestoreService firestore = Provider.of<FirestoreService>(context);
-   final List<Farmacia> farmacia = firestore.list;
+   final List<Farmacia> farmacia = firestore.listFarmaPlantao;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(

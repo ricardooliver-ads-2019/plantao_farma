@@ -54,56 +54,68 @@ class _ListFarmaciasAdmState extends State<ListFarmaciasAdm> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text("${widget.farmacia.nome}", 
-                        style: GoogleFonts.oswald(
-                          color: Colors.grey,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text("${widget.farmacia.nome}", 
+                              style: GoogleFonts.oswald(
+                                color: Colors.grey,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Text('CNPJ: ${widget.farmacia.cnpj}', 
+                              style: GoogleFonts.oswald(
+                                color: Colors.grey,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          
+                        ],
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10),
-                      child: Text('CNPJ - ${widget.farmacia.cnpj}', style: GoogleFonts.oswald(
-                        color: Colors.grey,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),),
-                    ),
+                    
+                    
+                    
                     SizedBox(height: 20),
-                    Expanded(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.3),
-                          borderRadius: BorderRadius.only(bottomRight: Radius.circular(10)),
-                        ),                      
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            GestureDetector(
-                              child: Icon(Icons.control_point_outlined, size: 40, color: AppColor.primaryColor),
-                              onTap:(){}
-                            ),
-                            SizedBox(width: 10),
-                            GestureDetector(
-                              child: Icon(Icons.edit_rounded, size: 40, color: AppColor.primaryColor),
-                              onTap:(){
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> PageUpdateFarma(farmacia: widget.farmacia)));
-                              }
-                            ),
-                            SizedBox(width: 10),
-                            GestureDetector(
-                              child: Icon(Icons.delete_forever, size: 40, color: AppColor.primaryColor),
-                              onTap:(){
-                                remover();
-                              }
-                            ),
-                          ],
-                        ),
+                    Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.3),
+                        borderRadius: BorderRadius.only(bottomRight: Radius.circular(10)),
+                      ),                      
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          GestureDetector(
+                            child: Icon(Icons.control_point_outlined, size: 40, color: AppColor.primaryColor),
+                            onTap:(){}
+                          ),
+                          SizedBox(width: 10),
+                          GestureDetector(
+                            child: Icon(Icons.edit_rounded, size: 40, color: AppColor.primaryColor),
+                            onTap:(){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=> PageUpdateFarma(farmacia: widget.farmacia)));
+                            }
+                          ),
+                          SizedBox(width: 10),
+                          GestureDetector(
+                            child: Icon(Icons.delete_forever, size: 40, color: AppColor.primaryColor),
+                            onTap:(){
+                              remover();
+                            }
+                          ),
+                        ],
                       ),
                     )
                   ],

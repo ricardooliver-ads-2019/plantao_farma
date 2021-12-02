@@ -34,7 +34,7 @@ class _AppBarCState extends State<AppBarC> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
             GestureDetector(
-              onTap:(){Navigator.of(context).pushReplacementNamed(AppRoutes.HOME);},
+              onTap:(){Navigator.of(context).pop();},
               child: Padding(
                 padding: const EdgeInsets.only(left: 20),
                 child: Icon(Icons.arrow_back, size: 30, color: AppColor.bgColor)

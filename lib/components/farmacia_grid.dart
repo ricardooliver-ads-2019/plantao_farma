@@ -33,12 +33,17 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
     return minutos;
   }
 
-  abertaOUfechada(int horaAtual, int horaAbrir, int horaFechar){
-    if ((horaAbrir <= horaAtual) & (horaAtual < horaFechar)) {
+  abertaOUfechada(int horaAtual, int horaAbrir, int horaFechar, bool plantao){
+    if (plantao) {
       return true;
-    }else{
-      return false;
+    } else {
+      if ((horaAbrir <= horaAtual) & (horaAtual < horaFechar)) {
+        return true;
+      }else{
+        return false;
+      }
     }
+    
   }
 
   @override
@@ -53,7 +58,7 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
     // pegando a hora de Abertura da farmacia 
     TimeOfDay horaAbertura = TimeOfDay(hour: widget.farmacia.horarioA[0], minute: widget.farmacia.horarioA[1]);
     int horaAber = getHorasParaMinutos(horaAbertura); 
-    on_off = abertaOUfechada(horaAtu, horaAber, horaFech);
+    on_off = abertaOUfechada(horaAtu, horaAber, horaFech, widget.farmacia.plantao);
     return Padding(
       padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
       child: GestureDetector(
@@ -90,11 +95,21 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                     ),),
-                    Text("${widget.farmacia.horarioAbertura} - ${widget.farmacia.horarioFechamento}", style: GoogleFonts.oswald(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),),
+                    widget.farmacia.plantao 
+                    ? Text('24h',
+                        style: GoogleFonts.oswald(
+                          color: AppColor.primaryColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : Text("${widget.farmacia.horarioAbertura} - ${widget.farmacia.horarioFechamento}", 
+                        style: GoogleFonts.oswald(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     SizedBox(height: 5),
                   ],
                 ),

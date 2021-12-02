@@ -10,6 +10,7 @@ import 'package:plantao_farma/screens/area_user_farma_screen.dart';
 import 'package:plantao_farma/screens/home_screen.dart';
 import 'package:plantao_farma/screens/login_screen.dart';
 import 'package:plantao_farma/screens/page_cadast_farma.dart';
+import 'package:plantao_farma/screens/page_farmacia_plantao_screen.dart';
 import 'package:plantao_farma/screens/page_principal_screen.dart';
 import 'package:plantao_farma/screens/splash_screen.dart';
 import 'package:plantao_farma/utils/auth_check.dart';
@@ -74,7 +75,7 @@ class _MyAppState extends State<MyApp> {
               AppRoutes.SPLASH: (context) => SplashScreen(),
               AppRoutes.HOME: (context) => HomeScreen(),
               AppRoutes.PAGEPRINCIAL: (context) => PagePrincipalScreen(),
-              //AppRoutes.PAGEDETAILSFARMA: (context) => PageDetailsFarmaScreen(),
+              AppRoutes.PAGEFARMACIASDEPLANTAO: (context) => PageFarmaciaPlantaoScrenn(),
               AppRoutes.AUTHCHECK: (context) => AuthCheck(),
               AppRoutes.LOGIN: (context) => LoginScreen(),
               AppRoutes.AREA_ADM: (context) => AreaADMScreen(),

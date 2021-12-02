@@ -363,7 +363,14 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
                             ),
                             Column(
                               children: [
-                                Text('${widget.farmacia.horarioAbertura} ás ${widget.farmacia.horarioFechamento}', 
+                                widget.farmacia.plantao ? Text('24horas',
+                                  style: GoogleFonts.oswald(
+                                    color: AppColor.primaryColor,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                                : Text('${widget.farmacia.horarioAbertura} ás ${widget.farmacia.horarioFechamento}', 
                                   style: GoogleFonts.oswald(
                                     color: AppColor.primaryColor,
                                     fontSize: 14,
