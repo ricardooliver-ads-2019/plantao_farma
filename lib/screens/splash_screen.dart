@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         color: Colors.red,    
                       ),
                     ),
-                    Image.asset(AppAssets.title),
+                    Image.asset(AppAssets.titleG, width: 220,),
     
                     SizedBox(
                       height: 20,

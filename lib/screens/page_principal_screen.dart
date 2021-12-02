@@ -29,7 +29,7 @@ class _PagePrincipalScreenState extends State<PagePrincipalScreen> {
                 height: 15,
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height-215,
+                height: MediaQuery.of(context).size.height-235,
                 child: ListView.builder(
                   itemCount: farmacia.length,
                   itemBuilder: (_, index){

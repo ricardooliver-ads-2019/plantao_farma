@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace, unnecessary_string_interpolations, implementation_imports
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace, unnecessary_string_interpolations, implementation_imports, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/models/farmacia.dart';
@@ -41,11 +41,6 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
     }
   }
 
-  
-
-
-
-
   @override
   Widget build(BuildContext context) {
     // pegendo a hora atual
@@ -61,83 +56,67 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
     on_off = abertaOUfechada(horaAtu, horaAber, horaFech);
     return Padding(
       padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(width: 1, color: AppColor.primaryColor),
-          borderRadius: BorderRadius.circular(10)
-        ),
-        child: GestureDetector(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(            
-                width: 110,
-                height: 140,
+      child: GestureDetector(
+        onTap: (){
+          listarDetailsFarma();
+          Future.delayed(Duration(seconds: 5));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> PageDetailsFarmaScreen(farmacia: widget.farmacia, on_off: on_off,)));
+        },
+        child: Stack(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 220,
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: AppColor.primaryColor),
+                borderRadius: BorderRadius.circular(10),
+                image: DecorationImage(image: NetworkImage(widget.farmacia.logo, scale: 1.0), fit: BoxFit.fill)
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
-                  image: DecorationImage(image: AssetImage(widget.farmacia.logo), fit: BoxFit.fill)
+                  color: Colors.black.withOpacity(0.3),
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))
+                ),
+                child: Column(                                            
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    SizedBox(height: 5),
+                    Text("Horario de Funcionamento", style: GoogleFonts.oswald(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                    Text("${widget.farmacia.horarioAbertura} - ${widget.farmacia.horarioFechamento}", style: GoogleFonts.oswald(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),),
+                    SizedBox(height: 5),
+                  ],
                 ),
               ),
-              
-              Expanded(
-                child: Container(
-                  height: 140,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Center(
-                        child: Text("${widget.farmacia.nome}", 
-                          style: GoogleFonts.oswald(
-                            color: Colors.grey,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 5),
-                            Text("Horario de Funcionamento", style: GoogleFonts.oswald(
-                              color: Colors.grey,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),),
-                            Text("${widget.farmacia.horarioAbertura} - ${widget.farmacia.horarioFechamento}", style: GoogleFonts.oswald(
-                              color: Colors.grey,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),),
-                            SizedBox(height: 5),
-                          ],
-                        ),
-                      ),
-                       Expanded(
-                         child: Container(
-                           color: Colors.grey.withOpacity(0.2),
-                           child: Row(
-                             mainAxisAlignment: MainAxisAlignment.center,
-                             children: [
-                               Image.asset(on_off ? AppAssets.buttonON : AppAssets.buttonOFF, width: 70,),
-                             ],
-                           ),
-                         ),
-                       ) 
-                    ],
-                  ),
+            ),
+            Positioned(
+              top: 0,
+              left: 5,
+              child: Text("${widget.farmacia.nome}", 
+                style: GoogleFonts.oswald(
+                  color: Colors.black87,
+                  fontSize: 22,
+                  fontWeight: FontWeight.normal,
                 ),
-              ),    
-            ],
-          ),
-          onTap: (
-
-          ){
-            listarDetailsFarma();
-            Future.delayed(Duration(seconds: 5));
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> PageDetailsFarmaScreen(farmacia: widget.farmacia, on_off: on_off,)));
-          },
+              ),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Image.asset(on_off ? AppAssets.buttonON : AppAssets.buttonOFF, width: 70,)
+            ),
+          ],
         ),
       ),
     );

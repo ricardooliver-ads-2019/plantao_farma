@@ -11,6 +11,7 @@ import 'package:plantao_farma/provides/services/time_service.dart';
 import 'package:plantao_farma/screens/login_screen.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
 import 'package:plantao_farma/utils/app_color.dart';
+import 'package:plantao_farma/utils/mask_formatter.dart';
 import 'package:provider/src/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -33,7 +34,8 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
   var _bairroEC = TextEditingController();
   var _cidadeEC = TextEditingController();
   var _ufEC = TextEditingController();
-    var _cepEC = TextEditingController();
+  var _cepEC = TextEditingController();
+  var _logoEC = TextEditingController();
   TimeOfDay? _hA = TimeOfDay(hour: 8, minute: 0);
   TimeOfDay? _hF = TimeOfDay(hour: 22, minute: 0);
   List<int> horaAber = [8, 0];
@@ -53,6 +55,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
     _cidadeEC.dispose();
     _cepEC.dispose();
     _ufEC.dispose();
+    _logoEC.clear();
     super.dispose();
   }
 
@@ -70,6 +73,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
       _cidadeEC.clear();
       _cepEC.clear();
       _ufEC.clear();
+      _logoEC.clear();
       _platao = false;
       _hA = TimeOfDay(hour: 8, minute: 0);
       _hF = TimeOfDay(hour: 22, minute: 0);
@@ -141,7 +145,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
       nome: _nameEC.text,
       cnpj: _cnpjEC.text,
       email: _emailEC.text,
-      logo: 'assets/images/imgFarmacias/imgFarmacia1.png',
+      logo: _logoEC.text,
       telefone: _telefoneEC.text, 
       telefone2: _telefone2EC.text,
       whatsapp: _whatsaapEC.text,
@@ -218,6 +222,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             ),
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskCNPJ],
                 controller: _cnpjEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -237,6 +242,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             ),
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskPhone],
                 keyboardType: TextInputType.phone,
                 controller: _telefoneEC,
                 onChanged: (value) {},
@@ -254,6 +260,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             ),
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskPhone],
                 keyboardType: TextInputType.phone,
                 controller: _telefone2EC,
                 onChanged: (value) {},
@@ -270,6 +277,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
             ),
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskCel],
                 keyboardType: TextInputType.phone,
                 controller: _whatsaapEC,
                 onChanged: (value) {},
@@ -342,6 +350,7 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
 
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskCEP],
                 keyboardType: TextInputType.phone,
                 controller: _cepEC,
                 onChanged: (value) {},
@@ -465,6 +474,24 @@ class _FormCadastFarmaciaState extends State<FormCadastFarmacia> {
 
             SizedBox(
               height: 10,
+            ),
+
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.url,
+                controller: _logoEC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Foto",
+                  hintText: "Informe o endereço da imagem",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+                validator: Validatorless.required('Campo obrigatório!'),
+              ),
             ),
 
             Container(

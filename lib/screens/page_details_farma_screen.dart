@@ -1,10 +1,15 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, prefer_collection_literals
 
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:plantao_farma/components/farma_detalhes_maps.dart';
 import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
 import 'package:plantao_farma/utils/app_color.dart';
+import 'package:plantao_farma/utils/link_whatsapp.dart';
+import 'package:url_launcher/url_launcher.dart';
 class PageDetailsFarmaScreen extends StatefulWidget {
   const PageDetailsFarmaScreen({ Key? key, required this.farmacia, required this.on_off }) : super(key: key);
   final Farmacia farmacia;
@@ -15,8 +20,46 @@ class PageDetailsFarmaScreen extends StatefulWidget {
 }
 
 class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
-   @override
+  late GoogleMapController _mapsController;
+  get mapsController => _mapsController;
+  final appKey = GlobalKey();
+  
+
+  Set<Marker> markes = Set<Marker>();
+
+  void onMapCreated(GoogleMapController gms) async{
+    _mapsController = gms;
+    loadFarmacia();
+  }
+
+  loadFarmacia(){
+    markes.add(
+      Marker(
+        markerId: MarkerId(widget.farmacia.nome),
+        position: LatLng(-9.916206238799434, -63.03447574686395),
+        infoWindow: InfoWindow(
+          title: widget.farmacia.nome,
+        ),
+        onTap:(){
+          showModalBottomSheet(context: context, builder: (context) => FarmaDetalhes(farmacia: widget.farmacia));
+        }
+      )
+    );
+  }
+
+
+  launchApp(String url, BuildContext context)async{
+    await canLaunch(url)? await launch(url):showDialog(context: context, builder: (BuildContext context){
+      return AlertDialog(
+        title: Text('Alert!'),
+        content: Text('Não foi possível encontrar um App compatível.'),
+      );
+    });
+  }
+
+  @override
   void initState(){
+    loadFarmacia();
     super.initState();
     Future.delayed(Duration(seconds: 5));
   }
@@ -81,7 +124,7 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
                         height: 200,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(image:  NetworkImage('https://i.glbimg.com/og/ig/infoglobo1/f/original/2020/08/31/pague_menos.jpg'), fit: BoxFit.fill),
+                          image: DecorationImage(image:  NetworkImage(widget.farmacia.logo), fit: BoxFit.fill),
                         ),
                       ),
                       Container(
@@ -115,29 +158,51 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
                       children: [
                         Column(
                           children: [
-                            Container(
-                              child: Center(
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: 1, color: AppColor.bgColor),
-                                    borderRadius: BorderRadius.circular(5),
+                            GestureDetector(
+                              onTap: (){
+                                launchApp('tel:${widget.farmacia.telefone}', context);
+                              },
+                              child: Container(
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text('Telefone', 
+                                        style: GoogleFonts.oswald(
+                                          fontSize: 14,
+                                          color: AppColor.bgColor,
+                                          fontWeight: FontWeight.bold,
+                                        )
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(width: 2, color: AppColor.bgColor),
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: Center(child: Image(image: AssetImage(AppAssets.iconPhone),width: 30,)),
+                                      ),
+                                    ],
                                   ),
-                                  child: Center(child: Image(image: AssetImage(AppAssets.iconPhone),width: 30,)),
                                 ),
-                              ),
-                              height: 120,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Color(0xFFCCCCCC),
+                                height: 120,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black.withOpacity(0.3),
+                                  //color: Color(0xFFCCCCCC),
+                                ),
                               ),
                             ),
                             Column(
                               children: [
-                                Text('69 - 99999-4599', 
+                                Text(widget.farmacia.telefone, 
                                   style: GoogleFonts.oswald(
+                                    color: AppColor.primaryColor,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -152,27 +217,104 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
 
                         Column(
                           children: [
-                            Container(
-                              child: Center(
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: 1, color: AppColor.bgColor),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Center(child: Icon(Icons.add_shopping_cart_rounded, size: 30, color: AppColor.primaryColor)),
+                            GestureDetector(
+                              onTap: (){
+                                linkWhatsapp(widget.farmacia.whatsapp);
+                              },
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Disk Pedidos', 
+                                      style: GoogleFonts.oswald(
+                                        fontSize: 14,
+                                        color: AppColor.bgColor,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(width: 2, color: AppColor.bgColor),
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: Center(child: Icon(Icons.add_shopping_cart_rounded, size: 30, color: AppColor.primaryColor)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                height: 120,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black.withOpacity(0.3),
+                                  //color: Color(0xFFCCCCCC),
                                 ),
                               ),
-                              height: 120,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Color(0xFFCCCCCC),
+                            ),
+                            Text('Pesça agora', 
+                              style: GoogleFonts.oswald(
+                                color: AppColor.primaryColor,
+                                fontSize: 14,
+                              ),
+                            )
+                          ], 
+                        ),
+
+                        SizedBox(
+                          width: 15,
+                        ),
+
+                        Column(
+                          children: [
+                            GestureDetector(
+                              onTap:(){
+                                linkWhatsapp(widget.farmacia.whatsapp);
+                              },
+                              child: Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Whatsapp', 
+                                      style: GoogleFonts.oswald(
+                                        fontSize: 14,
+                                        color: AppColor.bgColor,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        width: 50,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(width: 2, color: AppColor.bgColor),
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: Center(child: Image(image: AssetImage(AppAssets.iconWhatsapp),width: 30,)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                height: 120,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.black.withOpacity(0.3),
+                                  //color: Color(0xFFCCCCCC),
+                                ),
                               ),
                             ),
-                            Text('Disk - Pedidos', 
+                            Text(widget.farmacia.whatsapp, 
                               style: GoogleFonts.oswald(
+                                color: AppColor.primaryColor,
                                 fontSize: 14,
                               ),
                             )
@@ -187,65 +329,43 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
                           children: [
                             Container(
                               child: Center(
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: 1, color: AppColor.bgColor),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Center(child: Image(image: AssetImage(AppAssets.iconWhatsapp),width: 30,)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Funcionamento', 
+                                      style: GoogleFonts.oswald(
+                                        fontSize: 14,
+                                        color: AppColor.bgColor,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      width: 50,
+                                      height: 50,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(width: 2, color: AppColor.bgColor),
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Center(child: Image(image: AssetImage(AppAssets.iconRelogio),width: 30,)),
+                                    ),
+                                  ],
                                 ),
                               ),
                               height: 120,
                               width: 100,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Color(0xFFCCCCCC),
-                              ),
-                            ),
-                            Text('69 - 99999-4599', 
-                              style: GoogleFonts.oswald(
-                                fontSize: 14,
-                              ),
-                            )
-                          ], 
-                        ),
-
-                        SizedBox(
-                          width: 15,
-                        ),
-
-                        Column(
-                          children: [
-                            Container(
-                              child: Center(
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(width: 1, color: AppColor.bgColor),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Center(child: Image(image: AssetImage(AppAssets.iconRelogio),width: 30,)),
-                                ),
-                              ),
-                              height: 120,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Color(0xFFCCCCCC),
+                                color: Colors.black.withOpacity(0.3),
                               ),
                             ),
                             Column(
                               children: [
-                                Text('Horario', 
+                                Text('${widget.farmacia.horarioAbertura} ás ${widget.farmacia.horarioFechamento}', 
                                   style: GoogleFonts.oswald(
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                Text('(07:30) ás (21:30)', 
-                                  style: GoogleFonts.oswald(
+                                    color: AppColor.primaryColor,
                                     fontSize: 14,
                                   ),
                                 ),
@@ -263,74 +383,43 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
                     ),
                   ),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 120,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: AppColor.primaryColor),
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(image: AssetImage(AppAssets.imgMaps), fit: BoxFit.fill),
-                        ),
+                  GestureDetector(
+                    onTap: (){
+                      linkWhatsapp(widget.farmacia.whatsapp);
+                    },
+                    child: Container(
+                      height: 60,
+                      width: 180,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(50),
+                  
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Endereço: Novo Horizonte, N° 1799",
-                              style: GoogleFonts.nunito(
-                                fontSize: 15,
-                                //color: Colors.grey.withOpacity(0.5),
-                              ),
-                            ),
-                           
-                            Text('Bairro: St. 03',
-                              style: GoogleFonts.nunito(
-                                fontSize: 15,
-                                //color: Colors.grey.withOpacity(0.5),
-                              ),
-                            ),
-                            
-                            Text('Cidade: Ariquemes-RO',
-                              style: GoogleFonts.nunito(
-                                fontSize: 15,
-                                //color: Colors.grey.withOpacity(0.5),
-                              ),
-                            ),
-                            
-                            Text('CEP: 76870-042',
-                              style: GoogleFonts.nunito(
-                                fontSize: 15,
-                                //color: Colors.grey.withOpacity(0.5),
-                              ),
-                            ),
-                             SizedBox(
-                              height: 15,
-                            ),
-                          ],
-                        ),
-                      ),                      
-                    ],
+                      child: Center(
+                        child: Image(image: AssetImage(AppAssets.iconPedido), width: 40,),
+                      ),
+                    ),
                   ),
 
                   SizedBox(
-                    height: 40,
+                    height: 20,
                   ),
 
                   Container(
-                    height: 60,
-                    width: 180,
+                    width: telaWidth * 0.95,
+                    height: 200,
                     decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.3),
-                      borderRadius: BorderRadius.circular(50),
-
+                      border: Border.all(width: 2, color: AppColor.primaryColor),
                     ),
-                    child: Center(
-                      child: Image(image: AssetImage(AppAssets.iconPedido), width: 40,),
+                    child: GoogleMap(
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(-9.916206238799434, -63.03447574686395),
+                        zoom: 15.8,                        
+                      ),
+                      zoomControlsEnabled: true,
+                      myLocationEnabled: true,
+                      onMapCreated: onMapCreated,
+                      markers: markes,
                     ),
                   ),
 

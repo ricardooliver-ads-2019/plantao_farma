@@ -83,7 +83,7 @@ class _AreaADMScreenState extends State<AreaADMScreen> {
               ),
               Padding(padding: EdgeInsets.only(bottom: 10)),
               SizedBox(
-                height: MediaQuery.of(context).size.height-215,
+                height: MediaQuery.of(context).size.height-275,
                 child: ListView.builder(
                   itemCount: farmacia.length,
                   itemBuilder: (_, index){

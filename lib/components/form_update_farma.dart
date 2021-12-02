@@ -8,6 +8,7 @@ import 'package:plantao_farma/provides/services/firestore_service.dart';
 import 'package:plantao_farma/provides/services/time_service.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
 import 'package:plantao_farma/utils/app_color.dart';
+import 'package:plantao_farma/utils/mask_formatter.dart';
 import 'package:provider/src/provider.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -76,6 +77,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
     _cidadeEC.dispose();
     _cepEC.dispose();
     _ufEC.dispose();
+    _logoEC.dispose();
     super.dispose();
   }
 
@@ -95,6 +97,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
       _cidadeEC.clear();
       _cepEC.clear();
       _ufEC.clear();
+      _logoEC.clear();
       _platao = false;
       _hA = TimeOfDay(hour: 8, minute: 0);
       _hF = TimeOfDay(hour: 22, minute: 0);
@@ -172,7 +175,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
       nome: _nameEC.text,
       cnpj: _cnpjEC.text,
       email: _emailEC.text,
-      logo: 'assets/images/imgFarmacias/imgFarmacia2.png',
+      logo: _logoEC.text,
       telefone: _telefoneEC.text, 
       telefone2: _telefone2EC.text,
       whatsapp: _whatsaapEC.text,
@@ -192,6 +195,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
     try{
       await context.read<FirestoreService>().update(_farmacia);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Center(child: Icon(Icons.check, size: 50, color: Colors.green))));
+      Navigator.pop(context);
     } on FirestoreExceptions catch (e){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
     }
@@ -227,6 +231,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
             ),
             Container(
               child: TextFormField(
+                //initialValue: ,
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailEC,
                 onChanged: (value) {},
@@ -248,6 +253,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
             ),
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskCNPJ],
                 controller: _cnpjEC,
                 onChanged: (value) {},
                 style: TextStyle(color: Colors.grey),
@@ -267,6 +273,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
             ),
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskPhone],
                 keyboardType: TextInputType.phone,
                 controller: _telefoneEC,
                 onChanged: (value) {},
@@ -284,6 +291,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
             ),
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskPhone],
                 keyboardType: TextInputType.phone,
                 controller: _telefone2EC,
                 onChanged: (value) {},
@@ -300,6 +308,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
             ),
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskCel],
                 keyboardType: TextInputType.phone,
                 controller: _whatsaapEC,
                 onChanged: (value) {},
@@ -372,6 +381,7 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
 
             Container(
               child: TextFormField(
+                inputFormatters: [MaskFormatter().maskCEP],
                 keyboardType: TextInputType.phone,
                 controller: _cepEC,
                 onChanged: (value) {},
@@ -495,6 +505,24 @@ class _FormUpdateFarmaState extends State<FormUpdateFarma> {
 
             SizedBox(
               height: 10,
+            ),
+
+            Container(
+              child: TextFormField(
+                keyboardType: TextInputType.url,
+                controller: _logoEC,
+                onChanged: (value) {},
+                style: TextStyle(color: Colors.grey),
+                decoration: InputDecoration(
+                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                  labelText: "Foto",
+                  hintText: "Informe o endereço da imagem",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  labelStyle: TextStyle(color: Colors.grey)
+                ),
+                validator: Validatorless.required('Campo obrigatório!'),
+              ),
             ),
 
             Container(

@@ -1,6 +1,4 @@
 // ignore_for_file: unused_element, avoid_print, unnecessary_brace_in_string_interps, await_only_futures
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plantao_farma/models/farmacia.dart';

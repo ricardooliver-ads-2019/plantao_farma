@@ -20,10 +20,12 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(AppAssets.titleG),
+            Image.asset(AppAssets.titleG,width: 270,),
+            Image.asset(AppAssets.logo, width: 160,),
             Text("\"Tenha todas as farmacias na palma de sua mão\"",
               style: GoogleFonts.oswald(
-                fontSize: 20.0,
+                color: AppColor.primaryColor,
+                fontSize: 18,
                 fontWeight: FontWeight.normal,
                 fontStyle: FontStyle.italic,
                 wordSpacing: 0.5,
@@ -32,7 +34,6 @@ class HomeScreen extends StatelessWidget {
 
               
             ),
-            Image.asset(AppAssets.logo, width: 70,),
             GestureDetector(
               onTap: (){
                 Navigator.of(context).pushNamed(AppRoutes.PAGEPRINCIAL);

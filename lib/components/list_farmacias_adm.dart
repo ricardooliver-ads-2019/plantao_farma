@@ -29,7 +29,7 @@ class _ListFarmaciasAdmState extends State<ListFarmaciasAdm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 30, left: 10, right: 10),
+      padding: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(width: 1, color: AppColor.primaryColor),
@@ -40,16 +40,16 @@ class _ListFarmaciasAdmState extends State<ListFarmaciasAdm> {
           children: [
             Container(            
               width: 110,
-              height: 140,
+              height: 160,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
-                image: DecorationImage(image: AssetImage(widget.farmacia.logo), fit: BoxFit.fill)
+                image: DecorationImage(image: NetworkImage(widget.farmacia.logo, scale: 1.0), fit: BoxFit.fill)
               ),
             ),
             
             Expanded(
               child: Container(
-                height: 140,
+                height: 160,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,19 +85,19 @@ class _ListFarmaciasAdmState extends State<ListFarmaciasAdm> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             GestureDetector(
-                              child: Icon(Icons.control_point_outlined, size: 50, color: AppColor.primaryColor),
+                              child: Icon(Icons.control_point_outlined, size: 40, color: AppColor.primaryColor),
                               onTap:(){}
                             ),
                             SizedBox(width: 10),
                             GestureDetector(
-                              child: Icon(Icons.edit_rounded, size: 50, color: AppColor.primaryColor),
+                              child: Icon(Icons.edit_rounded, size: 40, color: AppColor.primaryColor),
                               onTap:(){
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=> PageUpdateFarma(farmacia: widget.farmacia)));
                               }
                             ),
                             SizedBox(width: 10),
                             GestureDetector(
-                              child: Icon(Icons.delete_forever, size: 50, color: AppColor.primaryColor),
+                              child: Icon(Icons.delete_forever, size: 40, color: AppColor.primaryColor),
                               onTap:(){
                                 remover();
                               }

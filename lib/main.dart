@@ -2,6 +2,7 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
 import 'package:plantao_farma/app_routes.dart';
 import 'package:plantao_farma/provides/services/time_service.dart';
 import 'package:plantao_farma/screens/area_adm_screen.dart';
@@ -19,7 +20,8 @@ import 'provides/services/firestore_service.dart';
 
 void main() async{
   //await Firebase.initializeApp();
-  
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
   runApp(
     MultiProvider(
       providers: [
@@ -67,7 +69,7 @@ class _MyAppState extends State<MyApp> {
             theme: ThemeData(
               primarySwatch: Colors.red,
             ),
-            initialRoute: AppRoutes.PAGEPRINCIAL,
+            initialRoute: AppRoutes.SPLASH,
             routes: {
               AppRoutes.SPLASH: (context) => SplashScreen(),
               AppRoutes.HOME: (context) => HomeScreen(),
