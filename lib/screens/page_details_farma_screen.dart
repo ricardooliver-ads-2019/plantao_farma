@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, prefer_collection_literals
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, non_constant_identifier_names, prefer_collection_literals, unused_field, unnecessary_new, avoid_print, avoid_unnecessary_containers, unnecessary_string_interpolations
 
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:plantao_farma/components/farma_detalhes_maps.dart';
 import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
@@ -11,9 +11,12 @@ import 'package:plantao_farma/utils/app_color.dart';
 import 'package:plantao_farma/utils/link_whatsapp.dart';
 import 'package:url_launcher/url_launcher.dart';
 class PageDetailsFarmaScreen extends StatefulWidget {
-  const PageDetailsFarmaScreen({ Key? key, required this.farmacia, required this.on_off }) : super(key: key);
+  const PageDetailsFarmaScreen({ Key? key, required this.farmacia, required this.on_off, required this.lat, required this.long}) : super(key: key);
   final Farmacia farmacia;
   final bool on_off;
+  final double lat;
+  final double long;
+
 
   @override
   _PageDetailsFarmaScreenState createState() => _PageDetailsFarmaScreenState();
@@ -23,9 +26,8 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
   late GoogleMapController _mapsController;
   get mapsController => _mapsController;
   final appKey = GlobalKey();
-  
-
   Set<Marker> markes = Set<Marker>();
+  
 
   void onMapCreated(GoogleMapController gms) async{
     _mapsController = gms;
@@ -36,7 +38,7 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
     markes.add(
       Marker(
         markerId: MarkerId(widget.farmacia.nome),
-        position: LatLng(-9.916206238799434, -63.03447574686395),
+        position: LatLng(widget.lat, widget.long),
         infoWindow: InfoWindow(
           title: widget.farmacia.nome,
         ),
@@ -57,6 +59,10 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
     });
   }
 
+  
+
+  
+
   @override
   void initState(){
     loadFarmacia();
@@ -65,6 +71,7 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    print(' ggggg ${widget.lat} -- ${widget.long}');
     //FirestoreService firestore = Provider.of<FirestoreService>(context);
     //final Farmacia farmacia = firestore.listDetailFarma[0];
     var telaWidth = MediaQuery.of(context).size.width;
@@ -412,22 +419,50 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
                     height: 20,
                   ),
 
-                  Container(
-                    width: telaWidth * 0.95,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2, color: AppColor.primaryColor),
-                    ),
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(-9.916206238799434, -63.03447574686395),
-                        zoom: 15.8,                        
+                  Stack(
+                    children: [
+                      Container(
+                        width: telaWidth * 0.95,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 2, color: AppColor.primaryColor),
+                        ),
+                        child: GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(widget.lat, widget.long),
+                            zoom: 15.8,                        
+                          ),
+                          zoomControlsEnabled: true,
+                          myLocationEnabled: true,
+                          onMapCreated: onMapCreated,
+                          markers: markes,
+                        ),
                       ),
-                      zoomControlsEnabled: true,
-                      myLocationEnabled: true,
-                      onMapCreated: onMapCreated,
-                      markers: markes,
-                    ),
+                      Positioned(
+                        child: Container(
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(width: 1, color: Colors.grey.withOpacity(0.3))
+                          ),
+                          child: TextButton.icon( 
+                            label: Text('Rotas', 
+                              style: GoogleFonts.roboto(
+                                fontSize: 14,
+                              ),
+                            ),
+                            onPressed: ()async{
+                              await MapsLauncher.launchQuery('${widget.farmacia.cep}, ${widget.farmacia.cidade}, ${widget.farmacia.uf}, Brasil');
+                            }, 
+                            autofocus: true,
+                            icon: Icon(Icons.assistant_direction, size: 20, color: Colors.blue,)
+                          ),
+                        ),
+                        bottom: 2,
+                        left: 5,
+                      )
+                    ],
                   ),
 
                 ],

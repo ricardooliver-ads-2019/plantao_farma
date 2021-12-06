@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace, unnecessary_string_interpolations, implementation_imports, non_constant_identifier_names
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, duplicate_ignore, sized_box_for_whitespace, unnecessary_string_interpolations, implementation_imports, non_constant_identifier_names, avoid_print
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/models/farmacia.dart';
 import 'package:plantao_farma/provides/services/firestore_service.dart';
@@ -18,6 +19,8 @@ class FarmaciaGrid extends StatefulWidget {
 class _FarmaciaGridState extends State<FarmaciaGrid> {
 
   bool on_off = false;
+  var lat = -9.902495177269794;
+  var long = -63.03662180065657;
 
   listarDetailsFarma()async{
     try{
@@ -45,9 +48,25 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
     }
     
   }
+  getLocationFarma()async{
+
+    List<Location> locations = await locationFromAddress("${widget.farmacia.endereco} - ${widget.farmacia.bairro}, ${widget.farmacia.cidade} - ${widget.farmacia.endereco}, ${widget.farmacia.cep}, Brasil");
+    for (var item in locations) {
+      lat = item.latitude;
+      long = item.longitude;
+    }
+    print(' FFFFFFF ${lat} -- ${long}');
+    
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
+    getLocationFarma();
+    // ignore: unnecessary_brace_in_string_interps
+    
+    //print('agora vai ${lat} -- ${long}');
     // pegendo a hora atual
     TimeOfDay horaAtual = TimeOfDay.now();
     // tranformando a hora atual para minutos 
@@ -65,7 +84,7 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
         onTap: (){
           listarDetailsFarma();
           Future.delayed(Duration(seconds: 5));
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> PageDetailsFarmaScreen(farmacia: widget.farmacia, on_off: on_off,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> PageDetailsFarmaScreen(farmacia: widget.farmacia, on_off: on_off, lat: lat, long: long,)));
         },
         child: Stack(
           children: [

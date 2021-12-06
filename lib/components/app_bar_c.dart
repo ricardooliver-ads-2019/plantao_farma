@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:plantao_farma/utils/app_assets.dart';
 import 'package:plantao_farma/utils/app_color.dart';
 
-import '../app_routes.dart';
 
 class AppBarC extends StatefulWidget {
   const AppBarC({Key? key}) : super(key: key);
