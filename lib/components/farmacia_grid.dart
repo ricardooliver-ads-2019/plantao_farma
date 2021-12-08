@@ -55,8 +55,7 @@ class _FarmaciaGridState extends State<FarmaciaGrid> {
       lat = item.latitude;
       long = item.longitude;
     }
-    print(' FFFFFFF ${lat} -- ${long}');
-    
+    //print('${lat} -- ${long}');
   }
 
   

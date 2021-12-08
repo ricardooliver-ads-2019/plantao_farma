@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
-import 'package:plantao_farma/utils/app_color.dart';
+import 'package:plantao_farma/utils/app_assets.dart';
 import '../app_routes.dart';
 
 class NavigatorBar extends StatelessWidget {
@@ -17,7 +17,7 @@ class NavigatorBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           GestureDetector(
-            child: Icon(Icons.home_rounded, size: 35, color: AppColor.primaryColor),
+            child: Image(image: AssetImage(AppAssets.iconFarmacias), width: 35,),
             onTap:(){
               Navigator.of(context).pushReplacementNamed(AppRoutes.PAGEPRINCIAL);
             },
@@ -29,7 +29,7 @@ class NavigatorBar extends StatelessWidget {
           //  },
           //),
           GestureDetector(
-            child: Icon(Icons.av_timer_outlined, size: 35, color: AppColor.primaryColor),
+            child: Image(image: AssetImage(AppAssets.iconFarmacias24h), width: 35,),
             onTap:(){
               Navigator.of(context).pushNamed(AppRoutes.PAGEFARMACIASDEPLANTAO);
             },

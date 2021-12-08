@@ -405,6 +405,7 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
                       height: 60,
                       width: 180,
                       decoration: BoxDecoration(
+                        border: Border.all(width: 0.2, color: AppColor.primaryColor),
                         color: Colors.grey.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(50),
                   
@@ -444,25 +445,31 @@ class _PageDetailsFarmaScreenState extends State<PageDetailsFarmaScreen> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
-                            border: Border.all(width: 1, color: Colors.grey.withOpacity(0.3))
+                            border: Border.all(width: 1.5, color: Colors.grey.withOpacity(0.5))
                           ),
                           child: TextButton.icon( 
                             label: Text('Rotas', 
                               style: GoogleFonts.roboto(
-                                fontSize: 14,
+                                color: Colors.blue,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             onPressed: ()async{
                               await MapsLauncher.launchQuery('${widget.farmacia.cep}, ${widget.farmacia.cidade}, ${widget.farmacia.uf}, Brasil');
                             }, 
                             autofocus: true,
-                            icon: Icon(Icons.assistant_direction, size: 20, color: Colors.blue,)
+                            icon: Icon(Icons.assistant_direction, size: 15, color: Colors.blue,)
                           ),
                         ),
-                        bottom: 2,
+                        bottom: 5,
                         left: 5,
                       )
                     ],
+                  ),
+
+                  SizedBox(
+                    height: 20,
                   ),
 
                 ],

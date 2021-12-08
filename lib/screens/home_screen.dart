@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unused_local_variable, must_be_immutable
+// ignore_for_file: prefer_const_constructors, unused_local_variable, must_be_immutable, unused_field
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
     }
 
     _locationData = await location.getLocation();
-    print(_locationData);
+    //print(_locationData);
   }
   @override
   Widget build(BuildContext context) {
@@ -90,15 +90,11 @@ class HomeScreen extends StatelessWidget {
                     Navigator.of(context).pushNamed(AppRoutes.LOGIN);
                     await getLocationUser();
                   },
-                  child: Text("AREA - ADM", 
-                    style: GoogleFonts.nunito(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.normal,
-                      decoration: TextDecoration.underline,
-                      //wordSpacing: 0.5,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.3)
                     ),
-
-                    textAlign: TextAlign.right,
+                    child: Image(image: AssetImage(AppAssets.iconAreaADM), width: 30,),
                   )
                 ),
                 SizedBox(

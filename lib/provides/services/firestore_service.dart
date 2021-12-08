@@ -103,7 +103,7 @@ class FirestoreService extends ChangeNotifier{
             list.add(farma);
             notifyListeners();
             
-          print('Dasdos exibicao: ${farma} - ${farma.nome} -  ${farma.horarioA} - ${farma.horarioF}');
+          //print('Dasdos exibicao: ${farma} - ${farma.nome} -  ${farma.horarioA} - $////{farma.horarioF}');
         }
         
       }

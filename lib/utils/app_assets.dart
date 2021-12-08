@@ -6,6 +6,9 @@ class AppAssets{
   static const buttonON = 'assets/images/imgButtonON.png';
   static const buttonOFF = 'assets/images/imgButtonOFF.png';
   static const buttonReset = 'assets/images/iconReset.png';
+  static const iconAreaADM = 'assets/images/imgIconAreaADM.png';
+  static const iconFarmacias = 'assets/images/imgIconFarmacias.png';
+  static const iconFarmacias24h = 'assets/images/imgIconFarmacias24h.png';
   static const iconEnviar = 'assets/images/imgIconEnviar.png';
   static const iconPhone = 'assets/images/imgIconPhone.png';
   static const iconPedido = 'assets/images/imgIconButtonPedir.png';
